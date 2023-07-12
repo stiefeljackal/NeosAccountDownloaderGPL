@@ -32,6 +32,7 @@ namespace AccountDownloaderLibrary
         public Action<long> BytesUploaded;
         public Action AssetUploaded;
         public Action<string> AssetMissing;
+        public Action AssetJobCompleted;
     }
 
     public interface IAccountDataGatherer
@@ -52,9 +53,8 @@ namespace AccountDownloaderLibrary
         Task Cancel();
 
         Task<long> GetAssetSize(string hash);
-        Task DownloadAsset(string hash, string targetPath);
-        Task<string> GetAsset(string hash);
-        Task<AssetData> ReadAsset(string hash);
+        Task<Stream> GetAssetStream(string hash);
+        Task<AssetMetadata> GetAssetMetadata(string hash);
 
         Task<List<CloudVariableDefinition>> GetVariableDefinitions(string ownerId);
         Task<CloudVariable> GetVariable(string ownerId, string path);
@@ -72,6 +72,9 @@ namespace AccountDownloaderLibrary
 
     public interface IAccountDataStore: IAccountDataGatherer
     {
+        Task MoveAsset(string oldPath,  string newPath);
+        Task StoreAsset(AssetMetadata assetMetadata, Stream stream, string hash);
+        Task StoreAssetMetadata(AssetMetadata assetMetadata, string hash);
         Task StoreDefinitions(List<CloudVariableDefinition> definition);
         Task StoreVariables(List<CloudVariable> variable);
         Task StoreGroup(Group group, Storage storage);

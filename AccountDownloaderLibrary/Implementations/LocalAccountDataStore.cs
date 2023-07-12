@@ -4,6 +4,10 @@ using CloudX.Shared;
 using AccountDownloaderLibrary.Extensions;
 using Medallion.Threading.FileSystem;
 using ConcurrentCollections;
+using System.IO.Abstractions;
+using AccountDownloaderLibrary.Implementations;
+using AccountDownloaderLibrary.Mime;
+using AccountDownloaderLibrary.Mime.Interfaces;
 
 namespace AccountDownloaderLibrary
 {
@@ -42,6 +46,10 @@ namespace AccountDownloaderLibrary
 
         readonly Dictionary<string, int> _fetchedRecords = new();
 
+        private readonly IFileSystem _fileSystem;
+
+        private readonly IMimeDetector _mimeDetector;
+
         private CancellationToken CancelToken;
 
         public int FetchedRecordCount(string ownerId)
@@ -50,11 +58,15 @@ namespace AccountDownloaderLibrary
             return count;
         }
 
-        public LocalAccountDataStore(string userId, string basePath, string assetsPath, AccountDownloadConfig config)
+        public LocalAccountDataStore(string userId, string basePath, string assetsPath, AccountDownloadConfig config) : this(userId, basePath, assetsPath, new FileSystem(), MimeDetector.Instance, config) { }
+
+        public LocalAccountDataStore(string userId, string basePath, string assetsPath, IFileSystem fileSystem, IMimeDetector mimeDetector, AccountDownloadConfig config)
         {
             UserId = userId;
             BasePath = basePath;
             AssetsPath = assetsPath;
+            _fileSystem = fileSystem;
+            _mimeDetector = mimeDetector;
             Config = config;
         }
 
@@ -88,29 +100,54 @@ namespace AccountDownloaderLibrary
 
         void InitDownloadProcessor(CancellationToken token)
         {
-            Directory.CreateDirectory(AssetsPath);
+            _fileSystem.Directory.CreateDirectory(AssetsPath);
 
             DownloadProcessor = new ActionBlock<AssetJob>(async job =>
             {
-                var path = GetAssetPath(job.hash);
-
-                if (File.Exists(path))
-                    return;
+                var hash = job.hash;
+                AssetMetadata metadata;
+                var path = GetAssetPath(hash);
 
                 try
                 {
-                    ProgressMessage?.Invoke($"Downloading asset {job.hash}");
+                    if (!_fileSystem.File.Exists(GetAssetMetadataPath(hash)))
+                    {
+                        ProgressMessage?.Invoke($"Downloading asset metadata for {hash}");
 
-                    await job.source.DownloadAsset(job.hash, path).ConfigureAwait(false);
+                        metadata = await job.source.GetAssetMetadata(hash).ConfigureAwait(false);
+                        await StoreAssetMetadata(metadata, hash).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        metadata = await GetAssetMetadata(hash);
+                    }
 
-                    job.callbacks.AssetUploaded();
+                    if (_fileSystem.File.Exists(path))
+                    {
+                        // If the extensionless asset file exists, then just rename the file.
+                        ProgressMessage?.Invoke($"Renaming asset {hash} with extension");
+                        await MoveAsset(path, path).ConfigureAwait(false);
+                    }
+                    else if(!DoesAssetFileExists(hash))
+                    {
 
-                    ProgressMessage?.Invoke($"Finished download {job.hash}");
+                        ProgressMessage?.Invoke($"Downloading asset {hash}");
+
+                        var stream = await job.source.GetAssetStream(hash).ConfigureAwait(false);
+                        await StoreAsset(metadata, stream, hash).ConfigureAwait(false);
+
+                        ProgressMessage?.Invoke($"Finished download {hash}");
+                    }
+
+                    job.callbacks.AssetUploaded?.Invoke();
                 }
                 catch (Exception ex)
                 {
-                    ProgressMessage?.Invoke($"Exception {job.hash}: " + ex);
+                    ProgressMessage?.Invoke($"Exception {hash}: " + ex);
                 }
+
+                job.callbacks.AssetJobCompleted?.Invoke();
+
             }, new ExecutionDataflowBlockOptions()
             {
                 CancellationToken = token,
@@ -204,7 +241,7 @@ namespace AccountDownloaderLibrary
             {
                 foreach (var file in Directory.EnumerateFiles(path, "*.json"))
                 {
-                    var entity = JsonSerializer.Deserialize<T>(File.ReadAllText(file));
+                    var entity = JsonSerializer.Deserialize<T>( File.ReadAllText(file));
 
                     list.Add(entity);
                 }
@@ -291,6 +328,7 @@ namespace AccountDownloaderLibrary
         string GroupsPath(string ownerId) => Path.Combine(BasePath, ownerId, "Groups");
         string MembersPath(string ownerId, string groupId) => Path.Combine(BasePath, ownerId, "GroupMembers", groupId);
         string GetAssetPath(string hash) => Path.Combine(AssetsPath, hash);
+        string GetAssetMetadataPath(string hash) => $"{GetAssetPath(hash)}.metadata.json";
 
         public async Task<DateTime> GetLatestMessageTime(string contactId)
         {
@@ -336,25 +374,173 @@ namespace AccountDownloaderLibrary
 
         public Task DownloadAsset(string hash, string targetPath)
         {
-            return Task.Run(() => File.Copy(GetAssetPath(hash), targetPath));
+            return Task.Run(() => _fileSystem.File.Copy(GetAssetPath(hash), targetPath));
         }
 
-        public Task<long> GetAssetSize(string hash)
+        /// <summary>
+        /// Gets the file size of the asset from the file system.
+        /// </summary>
+        /// <param name="hash">The file hash of the asset.</param>
+        /// <returns>A number to indicate the size of the assets in bytes.</returns>
+        /// <exception cref="MultipleHashExtensionsException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        public async Task<long> GetAssetSize(string hash)
         {
-            var path = GetAssetPath(hash);
-
-            if (File.Exists(path))
-                return Task.FromResult(new FileInfo(GetAssetPath(hash)).Length);
-            else
-                return Task.FromResult(0L);
+            var asset = await GetAssetMetadata(hash);
+            return asset.Size;
         }
 
-        public Task<string> GetAsset(string hash)
+        /// <summary>
+        /// Gets the file stream of the asset from the file system.
+        /// </summary>
+        /// <param name="hash">The file hash of the asset.</param>
+        /// <returns>The stream of the asset that can be read.</returns>
+        /// <exception cref="MultipleHashExtensionsException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        public Task<Stream> GetAssetStream(string hash)
         {
-            return Task.FromResult(GetAssetPath(hash));
+            var assetFilename = GetAssetFilename(hash);
+
+            Stream stream = _fileSystem.File.OpenRead(assetFilename);
+
+            return Task.FromResult(stream);
         }
 
-        public Task<AssetData> ReadAsset(string hash) => Task.FromResult<AssetData>(File.OpenRead(GetAssetPath(hash)));
+        /// <summary>
+        /// Gets the asset metadata of the stored asset from the file system.
+        /// </summary>
+        /// <param name="hash">The file hash of the asset.</param>
+        /// <returns>
+        /// The mime type of the size of the asset as an AssetData struct
+        /// from the metadata file or from reading the actual asset.
+        /// </returns>
+        /// <exception cref="MultipleHashExtensionsException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        public async Task<AssetMetadata> GetAssetMetadata(string hash)
+        {
+            var fs = _fileSystem.File.OpenRead(GetAssetMetadataPath(hash));
+            var assetMetadata = JsonSerializer.Deserialize<AssetMetadata>(fs);
+
+            if (assetMetadata.MimeType != null) { return assetMetadata; }
+
+            Stream stream = await GetAssetStream(hash);
+            var size = stream.Length;
+            var contentType = _mimeDetector.MostLikelyMimeType(stream);
+
+            return new AssetMetadata(null, contentType, size);
+        }
+
+        /// <summary>
+        /// Stores the asset on the file system.
+        /// </summary>
+        /// <param name="assetMetadata">The asset metadata to use to help retrieve the extension.</param>
+        /// <param name="stream">The asset stream to read data from.</param>
+        /// <param name="hash">The asset file hash to be used as the filename.</param>
+        /// <returns>The completed task.</returns>
+        /// <exception cref="DirectoryNotFoundException"></exception>
+        public async Task StoreAsset(AssetMetadata assetMetadata, Stream stream, string hash)
+        {
+            var ext = _mimeDetector.GetFileExtensionByMimeType(assetMetadata.MimeType);
+            byte[] headerBytes = null;
+
+            if (string.IsNullOrEmpty(ext))
+            {
+                headerBytes = new byte[Math.Min(MimeDetector.MAX_FILE_SIZE_TO_READ, stream.Length)];
+                await stream.ReadAsync(headerBytes).ConfigureAwait(false);
+
+                ext = _mimeDetector.MostLikelyFileExtension(headerBytes);
+            }
+
+            // If we cannot get the extension, then just write the file. We already store the mime type
+            var assetPath = $"{GetAssetPath(hash)}{(string.IsNullOrEmpty(ext) ? string.Empty :  $".{ext}")}";
+            using var fs = _fileSystem.File.OpenWrite(assetPath);
+
+            if (headerBytes != null)
+            {
+                await fs.WriteAsync(headerBytes).ConfigureAwait(false);
+            }
+            await stream.CopyToAsync(fs).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Stores the asset metadata on the file system.
+        /// </summary>
+        /// <param name="assetMetadata">The asset metadata.</param>
+        /// <param name="hash">The asset file hash to be used as the filename.</param>
+        /// <returns>The completed task.</returns>
+        /// <exception cref="DirectoryNotFoundException"></exception>
+        public async Task StoreAssetMetadata(AssetMetadata assetMetadata, string hash)
+        {
+            using var fs = _fileSystem.File.OpenWrite(GetAssetMetadataPath(hash));
+            await JsonSerializer.SerializeAsync(fs, assetMetadata);
+        }
+
+        /// <summary>
+        /// Moves the asset to a new path.
+        /// </summary>
+        /// <param name="oldPath">The asset file that needs to be moved.</param>
+        /// <param name="newPath">The new path to move the asset file to.</param>
+        /// <returns>The completed task.</returns>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="DirectoryNotFoundException"></exception>
+        public Task MoveAsset(string oldPath, string newPath)
+        {
+            var fs = _fileSystem.File.OpenRead(oldPath);
+            var ext = _mimeDetector.MostLikelyFileExtension(fs);
+
+            fs.Dispose();
+
+            // If we find the ext, then update the new path with it
+            if (!string.IsNullOrEmpty(ext))
+            {
+                newPath = $"{newPath}.{ext}";
+            }
+
+            // If old path does not equal the new path, then move the file.
+            if (oldPath != newPath)
+            {
+                _fileSystem.File.Move(oldPath, newPath);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Returns the asset filename that is available on the file system.
+        /// </summary>
+        /// <param name="hash">The file hash id used to search for the filename.</param>
+        /// <returns>The filename of the found of the asset file.</returns>
+        /// <exception cref="MultipleHashExtensionsException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        private string GetAssetFilename(string hash)
+        {
+            var filenames = _fileSystem.Directory.GetFiles(AssetsPath, $"{hash}.*")
+                .Where(filename => !filename.EndsWith(".metadata.json"))
+                .ToArray();
+
+            if (filenames.Length > 1) { throw new MultipleHashExtensionsException(hash); }
+            else if (!filenames.Any()) { throw new FileNotFoundException($"File with hash '{hash}' was not found."); }
+
+            return filenames.First();
+        }
+
+        /// <summary>
+        /// Determines if the asset file exists or not.
+        /// </summary>
+        /// <param name="hash">The file hash id used to locate the asset file.</param>
+        /// <returns>true if the asset file was found; otherwise, false.</returns>
+        private bool DoesAssetFileExists(string hash)
+        {
+            try
+            {
+                return !string.IsNullOrEmpty(GetAssetFilename(hash));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
 
         private void ReleaseLocks()
         {

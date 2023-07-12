@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using AccountDownloaderLibrary.Implementations;
 using CloudX.Shared;
 
 namespace AccountDownloaderLibrary
@@ -24,7 +25,8 @@ namespace AccountDownloaderLibrary
         private CancellationToken CancelToken;
 
         private const string DB_PREFIX = "neosdb:///";
-        private HttpClient WebClient = new HttpClient();
+        private static readonly TimeSpan WEB_CLIENT_DEFAULT_TIMEOUT = new TimeSpan(0, 3, 0);
+        private HttpClient WebClient;
 
         private readonly AccountDownloadConfig Config;
 
@@ -34,10 +36,13 @@ namespace AccountDownloaderLibrary
             return count;
         }
 
-        public CloudAccountDataStore(CloudXInterface cloud, AccountDownloadConfig config)
+        public CloudAccountDataStore(CloudXInterface cloud, AccountDownloadConfig config) : this(cloud, new HttpClient { Timeout = WEB_CLIENT_DEFAULT_TIMEOUT  }, config) { }
+
+        public CloudAccountDataStore(CloudXInterface cloud, HttpClient client, AccountDownloadConfig config)
         {
             this.Cloud = cloud;
             this.Config = config;
+            this.WebClient = client;
         }
 
         public virtual async Task Prepare(CancellationToken token)
@@ -261,37 +266,82 @@ namespace AccountDownloaderLibrary
             return null;
         }
 
-        public virtual async Task DownloadAsset(string hash, string targetPath)
-        {            
-            await WebClient.DownloadFileTaskAsync(
-                CloudXInterface.NeosDBToHttp(new Uri($"{DB_PREFIX}{hash}"), NeosDB_Endpoint.Default), targetPath);
-        }
-
+        /// <summary>
+        /// Gets the asset size from CloudX
+        /// </summary>
+        /// <param name="hash">The file hash of the asset.</param>
+        /// <returns>A number that represents the size of the asset.</returns>
         public virtual async Task<long> GetAssetSize(string hash)
         {
             var result = await Cloud.GetGlobalAssetInfo(hash).ConfigureAwait(false);
-
-            if (result.IsOK)
-                return result.Entity.Bytes;
-            else
-                return 0;
+            return result.IsOK ? result.Entity?.Bytes ?? 0 : 0;
         }
 
-        public virtual async Task<string> GetAsset(string hash)
+        /// <summary>
+        /// Gets the asset stream from CloudX.
+        /// </summary>
+        /// <param name="hash">The file hash of the asset.</param>
+        /// <returns>The asset as a readable stream from CloudX.</returns>
+        /// <exception cref="CloudXAssetResponseErrorException"></exception>
+        public virtual async Task<Stream> GetAssetStream(string hash)
         {
-            var tempPath = System.IO.Path.GetTempFileName();
-            await DownloadAsset(hash, tempPath).ConfigureAwait(false);
-            return tempPath;
+            var response = await WebClient.GetAsync(GetAssetUri(hash)).ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new CloudXAssetResponseErrorException(hash, response.StatusCode);
+            }
+
+            var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return stream;
         }
 
-        public virtual Task<AssetData> ReadAsset(string hash)
+        /// <summary>
+        /// Gets the CloudX Uri of the asset.
+        /// </summary>
+        /// <param name="hash">The file hash of the asset.</param>
+        /// <returns></returns>
+        private Uri GetAssetUri(string hash) => CloudXInterface.NeosDBToHttp(new Uri($"{DB_PREFIX}{hash}"), NeosDB_Endpoint.Default);
+
+        /// <summary>
+        /// Gets the asset metadata of the asset from CloudX.
+        /// </summary>
+        /// <param name="hash">The file hash of the asset.</param>
+        /// <returns>The mime type and the size of the asset as an AssetMetadata struct.</returns>
+        public virtual async Task<AssetMetadata> GetAssetMetadata(string hash)
         {
-            return Task.FromResult<AssetData>(CloudXInterface.NeosDBToHttp(new Uri($"{DB_PREFIX}{hash}"), NeosDB_Endpoint.Default));
+            var assetUri = GetAssetUri(hash);
+            var sizeTask = GetAssetSize(hash);
+            var mimeTask = GetAssetMime(hash);
+            await Task.WhenAll(sizeTask, mimeTask).ConfigureAwait(false);
+
+            return new AssetMetadata(assetUri, mimeTask.Result, sizeTask.Result);
         }
 
         public Task Cancel()
         {
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Gets the mime type of the asset.
+        /// </summary>
+        /// <param name="hash">The file hash associated with this asset.</param>
+        /// <returns>The mime type string from the available mime endpoint or from the header Content-Type in an asset blob call.</returns>
+        private async Task<string> GetAssetMime(string hash)
+        {
+            var mimeTask = await Cloud.GetAssetMime(hash);
+
+            if (mimeTask.IsOK) { return mimeTask.Content?.Replace("\"", string.Empty); }
+
+            // We should be able to get it at the endpoint above, but if the endpoint fails,
+            // then we will call the asset endpoint and get the Content-Type header. (Worst case)
+
+            var assetResponseTask = WebClient.GetAsync(GetAssetUri(hash));
+
+            var assetContentResponse = assetResponseTask.Result.Content;
+            var headers = assetContentResponse.Headers;
+            return headers.Contains("Content-Type") ? headers.GetValues("Content-Type").FirstOrDefault() : string.Empty;
         }
     }
 }
