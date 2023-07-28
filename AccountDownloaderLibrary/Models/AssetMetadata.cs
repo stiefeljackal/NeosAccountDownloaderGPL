@@ -23,6 +23,11 @@ public struct AssetMetadata
     public string MimeType { get; set; }
 
     /// <summary>
+    /// The file extension of the asset.
+    /// </summary>
+    public string Extension { get; set; }
+
+    /// <summary>
     /// The size of the asset in bytes.
     /// </summary>
     [JsonPropertyName("size")]
