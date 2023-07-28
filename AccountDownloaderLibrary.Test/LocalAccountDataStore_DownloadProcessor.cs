@@ -104,7 +104,6 @@ public class LocalAccountDataStore_DownloadProcessor
         var mockSource = sourceTuple.mockAccountGatherer;
         var mockCancellationToken = new CancellationToken();
         var mockHash = "a0a2ae9876f205fa324fd56a58aeee0e71eaee6bfbb2a556";
-        var mockData = "Mock\nData";
         var mockMimeType = "application/mock";
         var mockExtension = "mock";
         var mockFileData = Utility.CreateJsonFile(new AssetMetadata(null, mockMimeType));

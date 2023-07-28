@@ -68,12 +68,12 @@ public class MimeDetector_MostLikelyFileExtension
         };
 
     public static IEnumerable<object[]> Streams =>
-        ByteArray.Select(fileBytes => new object[] { fileBytes[0]?.ToString(), new MemoryStream(fileBytes[1] as byte[] ?? new byte[] { }) });
+        ByteArray.Select(fileBytes => new object[] { fileBytes[0]!.ToString()!, new MemoryStream(fileBytes[1] as byte[] ?? new byte[] { }) });
 
     public static IEnumerable<object[]> FilePaths =>
         ByteArray.Select(fileBytes =>
         {
-            var ext = fileBytes[0]?.ToString();
+            var ext = fileBytes[0]!.ToString()!;
             return new object[] { ext, $"path/to/file.{ext}", fileBytes[1] as byte[] ?? new byte[] { } };
         });
 }

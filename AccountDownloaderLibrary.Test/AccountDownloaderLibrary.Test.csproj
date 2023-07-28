@@ -42,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AccountDownloaderLibrary.Mime\AccountDownloaderLibrary.Mime.csproj" />
     <ProjectReference Include="..\AccountDownloaderLibrary\AccountDownloaderLibrary.csproj" />
   </ItemGroup>
 
