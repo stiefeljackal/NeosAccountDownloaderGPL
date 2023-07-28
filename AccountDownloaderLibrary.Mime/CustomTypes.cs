@@ -43,21 +43,4 @@ public class CustomTypes
                 }.ToSignature()
             },
         }.ToImmutableArray();
-
-    /// <summary>
-    /// Create a 7zbson definition that can be used for x-lzma-stream types over the default lzma file type.
-    /// </summary>
-    /// <returns>The 7zbson file type definition.</returns>
-    public static ImmutableArray<Definition> SEVENZBSON() =>
-        new List<Definition>() {
-            new() {
-                File = new() {
-                    Extensions = new[]{"7zbson"}.ToImmutableArray(),
-                    MimeType = "application/x-lzma-stream"
-                },
-                Signature = new Segment[] {
-                    PrefixSegment.Create(0, "5D 00 00"),
-                }.ToSignature()
-            },
-        }.ToImmutableArray();
 }

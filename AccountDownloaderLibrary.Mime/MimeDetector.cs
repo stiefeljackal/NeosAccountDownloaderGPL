@@ -40,7 +40,6 @@ public class MimeDetector : IMimeDetector
 
         ImmutableArray<Definition>.Builder AllBuildier = ImmutableArray.CreateBuilder<Definition>();
 
-        AllBuildier.AddRange(CustomTypes.SEVENZBSON());
         AllBuildier.AddRange(Default.All());
         AllBuildier.AddRange(exhaustiveDefs);
         AllBuildier.AddRange(CustomTypes.MESHX());
