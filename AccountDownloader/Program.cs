@@ -5,6 +5,8 @@ using Splat;
 
 using Microsoft.Extensions.Logging;
 using AccountDownloader.Services;
+using AccountDownloaderLibrary.NeosFetch;
+using System.Threading.Tasks;
 
 namespace AccountDownloader
 {
@@ -14,7 +16,12 @@ namespace AccountDownloader
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
         [STAThread]
-        public static void Main(string[] args) {
+        static async Task Main(string[] args)
+        {
+            if (!NeosFetcher.HasNeosAssembilesInExecutingPath())
+            {
+                await NeosFetcher.EnsureNeosAssemblies();
+            }
             Boostrapper.Register(Locator.CurrentMutable, Locator.Current);
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         } 

@@ -79,6 +79,7 @@
     <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.0.0-avalonia11-preview6" />
     <PackageReference Include="MessageBox.Avalonia" Version="3.0.1-rc2" />
     <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.0-preview20230704001" />
+    <ProjectReference Include="..\AccountDownloaderLibrary.NeosFetch\AccountDownloaderLibrary.NeosFetch.csproj" />
 
     <ProjectReference Include="..\AccountDownloaderLibrary\AccountDownloaderLibrary.csproj" />
 
