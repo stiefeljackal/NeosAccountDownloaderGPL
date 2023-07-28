@@ -13,7 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountDownloaderLibrary.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountDownloaderLibrary.Mime", "AccountDownloaderLibrary.Mime\AccountDownloaderLibrary.Mime.csproj", "{CA2712C0-FC28-46D9-94C1-665D583BDCEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountDownloaderLibrary.NeosFetch", "AccountDownloaderLibrary.NeosFetch\AccountDownloaderLibrary.NeosFetch.csproj", "{DA02E9EA-238A-4316-930A-A40E669C5467}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountDownloaderLibrary.NeosFetch", "AccountDownloaderLibrary.NeosFetch\AccountDownloaderLibrary.NeosFetch.csproj", "{DA02E9EA-238A-4316-930A-A40E669C5467}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Artifacts", "Artifacts", "{01798B17-7AA2-4AFA-96D9-5C4DFF2F2361}"
+	ProjectSection(SolutionItems) = preProject
+		.all-contributorsrc = .all-contributorsrc
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

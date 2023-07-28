@@ -1,4 +1,6 @@
-# Neos Account Downloader
+﻿# Neos Account Downloader (Stiefel's Version)
+
+**This is not the same repository of the Neos Account Downloader devloped by GuVAnj8Gv3RJ. This is a forked repository that includes additional features missing from the original tool that are in high demand by Neos users and features that GuVA is still implementing. If you prefer to download the original Neos Account Downloader, you may visit GuVA's repository at https://github.com/GuVAnj8Gv3RJ/NeosAccountDownloader. All FAQs from GuVA's README will be listed here in addtion to ones that I will list.**
 
 A small tool/utility to download your Neos Account contents to your local computer.
 
@@ -10,7 +12,7 @@ Please refer to the [License](LICENSE.md) file for additional commentary.
 # FAQ
 
 ## How do I download this?
-Use the [releases tab](https://github.com/GuVAnj8Gv3RJ/NeosAccountDownloader/releases), grab the latest.
+Use the [releases tab](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases) and grab the latest.
 
 ## Why does this exist?
 Backing up Neos content given the current circumstances seemed wise.
@@ -46,6 +48,13 @@ This diagram might help:
 - Records: Records contain a manifest of all assets that are required to represent an item or world. These are downloaded each time.
 - Everything Else: JSON Soup. Just JSON Files of various types. Contacts, Messages etc. These are downloaded each time.
 
+# Additional Features
+
+This tool is an enhanced version of [1.7.0](https://github.com/GuVAnj8Gv3RJ/NeosAccountDownloader/releases/tag/v1.7.0) that was released by GuVA. In addition to what was released in that version, the following are present in 1.7.0-a:
+
+- Almost 99% of assets downloaded will have their appropriate file extension instead of no extension.
+- Additional asset metadata is saved. This includes the asset's MIME type, file extension, and file size.
+
 # Known Issues
 
 ## Localization isn't instant
@@ -57,16 +66,9 @@ Localization defaults to your computer's language, so for most people this hopef
 Neos assets and records are stored in a way that makes it difficult for us to estimate the total number of records required for download. Due to this we sometimes discover more that need to be queued for download as we go. Causing numbers to jump around a little bit.
 
 # Contributing
-Thanks for your interest in contributing, in all cases except for localization please open an issue before opening a PR.
+Please feel free to contribute to this repository if you would like. Please keep in mind that any additions made will be under the GPLv2 license. All work that was and will be performed on GuVAnj8Gv3RJ's repository will be licensed under MIT.
 
-## Localization
-We'd love help with localization, follow these directions:
-1. Duplicate: https://github.com/GuVAnj8Gv3RJ/NeosAccountDownloader/blob/main/AccountDownloader/Properties/Resources.resx
-1. Save it as Resources.`<your language code>`.resx
-1. Translate
-1. PR it
-
-# Contributors
+# Contributors from GuVAnj8Gv3RJ's Repository
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
