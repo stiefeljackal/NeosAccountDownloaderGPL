@@ -51,9 +51,6 @@ public class DownloadSelectionViewModel : ViewModelBase, IAccountDownloadConfig
     public string FilePath { get; set; } = "";
 
     [ObservableAsProperty]
-    public string FormattedRequiredBytes { get; } = string.Empty;
-
-    [ObservableAsProperty]
     public long RequiredBytes { get; } = 0;
 
     [ObservableAsProperty]
@@ -120,8 +117,6 @@ public class DownloadSelectionViewModel : ViewModelBase, IAccountDownloadConfig
                 bytes += p.Item2;
                 return bytes;
             });
-        // Format the bytes into a string
-        byteTotal.Select(x => UnitFormatting.FormatBytes(x)).ToPropertyEx(this, x => x.FormattedRequiredBytes);
 
         // Leave the bytes as a number
         byteTotal.ToPropertyEx(this, x => x.RequiredBytes);
@@ -167,7 +162,14 @@ public class DownloadSelectionViewModel : ViewModelBase, IAccountDownloadConfig
             // So anyway, suffix the returned path with NeosDownload
             // See: https://stackoverflow.com/questions/372865/path-combine-for-urls
             // This is so complicated why?
-            var uri = fileName.Result!.Append("/NeosDownload");
+            var downloadAppend = "NeosDownload";
+
+            var uri = fileName.Result;
+
+            // Partially fixes #33 by preventing recursion i guess
+            // TODO: better fixes.
+            if (!uri!.AbsoluteUri.EndsWith(downloadAppend))
+                uri = uri.Append("/" + downloadAppend);
 
             FilePath = uri.LocalPath;
         }

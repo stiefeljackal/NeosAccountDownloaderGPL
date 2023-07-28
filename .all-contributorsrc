@@ -1,0 +1,121 @@
+{
+  "projectName": "NeosAccountDownloader",
+  "projectOwner": "GuVAnj8Gv3RJ",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "contributorsSortAlphabetically": false,
+  "linkToUsage": false,
+  "skipCi": true,
+  "contributors": [
+    {
+      "login": "TheJebForge",
+      "name": "TheJebForge",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12719947?v=4",
+      "profile": "https://github.com/TheJebForge",
+      "contributions": [
+        "translation"
+      ]
+    },
+    {
+      "login": "orange3134",
+      "name": "orange3134",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56525091?v=4",
+      "profile": "https://github.com/orange3134",
+      "contributions": [
+        "translation"
+      ]
+    },
+    {
+      "login": "stiefeljackal",
+      "name": "Stiefel Jackal",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20023996?v=4",
+      "profile": "https://github.com/stiefeljackal",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "Sharkmare",
+      "name": "Sharkmare",
+      "avatar_url": "https://avatars.githubusercontent.com/u/34294231?v=4",
+      "profile": "https://github.com/Sharkmare",
+      "contributions": [
+        "translation"
+      ]
+    },
+    {
+      "login": "GuVAnj8Gv3RJ",
+      "name": "GuVAnj8Gv3RJ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/132167543?v=4",
+      "profile": "https://github.com/GuVAnj8Gv3RJ",
+      "contributions": [
+        "code",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "RileyGuy",
+      "name": "Cyro",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9770110?v=4",
+      "profile": "https://github.com/RileyGuy",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Psychpsyo",
+      "name": "Psychpsyo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/60073468?v=4",
+      "profile": "https://github.com/Psychpsyo",
+      "contributions": [
+        "code",
+        "translation"
+      ]
+    },
+    {
+      "login": "Xlinka",
+      "name": "xLinka",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22996716?v=4",
+      "profile": "https://github.com/Xlinka",
+      "contributions": [
+        "research"
+      ]
+    },
+    {
+      "login": "bontebok",
+      "name": "Rucio",
+      "avatar_url": "https://avatars.githubusercontent.com/u/23562523?v=4",
+      "profile": "https://github.com/bontebok",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "SectOLT",
+      "name": "Samuel-Sann Laurin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19335111?v=4",
+      "profile": "http://www.xeltalania.com",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "rampa3",
+      "name": "rampa3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/68955305?v=4",
+      "profile": "https://github.com/rampa3",
+      "contributions": [
+        "translation"
+      ]
+    }
+  ],
+  "commitType": "docs"
+}

@@ -2,37 +2,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:p="clr-namespace:AccountDownloader.Properties"
-			 xmlns:ad="clr-namespace:AccountDownloader"
+             xmlns:p="clr-namespace:AccountDownloader.Properties"
+			       xmlns:ad="clr-namespace:AccountDownloader"
              x:Class="AccountDownloader.Views.GroupsListView"
-			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-			 d:DataContext="{x:Static ad:DesignData.DesignGroupsListViewModel}"
+			       mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			       d:DataContext="{x:Static ad:DesignData.DesignGroupsListViewModel}"
              xmlns:vm="using:AccountDownloader.ViewModels"
              x:DataType="vm:GroupsListViewModel"
              x:CompileBindings="True">
 	<StackPanel>
 		<TextBlock Text="{x:Static p:Resources.NoGroupsFound}" IsVisible="{Binding !HasGroups}" />
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="120" Margin="0,5,0,5" IsVisible="{Binding HasGroups}">
-		  <ItemsRepeater ItemsSource="{Binding GroupViewModels}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="110" IsVisible="{Binding HasGroups}" AllowAutoHide="False">
+		  <ItemsRepeater ItemsSource="{Binding Groups}">
         <ItemsRepeater.Layout>
-          <UniformGridLayout Orientation="Horizontal"
-                             MaximumRowsOrColumns="4"
-                             MinColumnSpacing="10"
-                             MinRowSpacing="10"
-                             MinItemHeight="55"
-                             MinItemWidth="200"
-                             ItemsStretch="Fill"/>
+            <UniformGridLayout Orientation="Horizontal"
+                                MinColumnSpacing="10"
+                                MinRowSpacing="5"
+                                MinItemHeight="35"
+                                MinItemWidth="150"
+                                ItemsStretch="Fill"/>
         </ItemsRepeater.Layout>
-			    <ItemsRepeater.ItemTemplate>
-				    <DataTemplate DataType="vm:GroupsListItemViewModel">
-					    <CheckBox IsChecked="{Binding Group.ShouldDownload}" VerticalContentAlignment="Top">
-                <StackPanel>
-                  <TextBlock Text="{Binding GroupTitleLabel}"/>
-                  <TextBlock Text="{Binding GroupByteSizeLabel}"/>
+			  <ItemsRepeater.ItemTemplate>
+				  <DataTemplate>
+					  <CheckBox IsChecked="{Binding ShouldDownload}" VerticalContentAlignment="Top">
+              <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="{Binding Name}" Width="125" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
                 </StackPanel>
-              </CheckBox>
-				    </DataTemplate>
-			    </ItemsRepeater.ItemTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                  <TextBlock>
+                    <TextBlock FontSize="12" Text="{Binding Storage.UsedBytes, Converter={StaticResource BytesConverter}}"/>
+                    <TextBlock FontSize="12" Text="{x:Static p:Resources.GroupsAdminIndicator}" IsVisible="{Binding IsAdmin}"/>
+                  </TextBlock>
+                </StackPanel>
+              </StackPanel>
+            </CheckBox>
+				  </DataTemplate>
+			  </ItemsRepeater.ItemTemplate>
 		  </ItemsRepeater>
     </ScrollViewer>
 	</StackPanel>

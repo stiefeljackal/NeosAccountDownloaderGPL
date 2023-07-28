@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,195 +118,201 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About" xml:space="preserve">
-    <value>À propos</value>
+    <value>O aplikaci</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Téléchargeur de compte Neos</value>
+    <value>Nástroj pro stažení dat z účtu Neos</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Êtes-vous sûr?</value>
+    <value>Jste si jist(a)?</value>
   </data>
   <data name="AreYouSureDownloadCancel" xml:space="preserve">
-    <value>Êtes-vous sûr de vouloir annuler le téléchargement?</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Annuler</value>
-  </data>
-  <data name="CloudVariableDefinitions" xml:space="preserve">
-    <value>Définitions des variables nuage</value>
-  </data>
-  <data name="CloudVariableValues" xml:space="preserve">
-    <value>Données des variables nuage</value>
-  </data>
-  <data name="CompleteQuestion" xml:space="preserve">
-    <value>Téléchargement terminé, Voulez-vous en initier un autre?</value>
-  </data>
-  <data name="Contacts" xml:space="preserve">
-    <value>Contacts</value>
-  </data>
-  <data name="Continue" xml:space="preserve">
-    <value>Continuer</value>
-  </data>
-  <data name="Downloading" xml:space="preserve">
-    <value>Téléchargement</value>
-  </data>
-  <data name="Error" xml:space="preserve">
-    <value>Erreur</value>
-  </data>
-  <data name="Errors.BlankPassword" xml:space="preserve">
-    <value>Mot de passe ne peut pas être vide.</value>
-  </data>
-  <data name="Errors.BlankUsername" xml:space="preserve">
-    <value>Utilisateur ne peut pas être vide.</value>
-  </data>
-  <data name="Errors.CannotSelectFolder" xml:space="preserve">
-    <value>Impossible de sélectioner le dossier, sélectionez manuellement.</value>
-  </data>
-  <data name="Errors.DownloadCancelled" xml:space="preserve">
-    <value>Téléchargement du compte annulé!</value>
-  </data>
-  <data name="Errors.DownloadFailure" xml:space="preserve">
-    <value>Une erreur de téléchargement est survenue, causé par {0}. Consultez les fichiers log pour plus de détails, ou retentez le téléchargement.</value>
-  </data>
-  <data name="Errors.NoFolderSelected" xml:space="preserve">
-    <value>Aucun dossier sélectioné.</value>
-  </data>
-  <data name="Errors.NoMainWindow" xml:space="preserve">
-    <value>Fenêtre principale manquante.</value>
-  </data>
-  <data name="Errors.UnexpectedLoginError" xml:space="preserve">
-    <value>Une erreur de connexion est survenue.</value>
-  </data>
-  <data name="Errors.UnknownError" xml:space="preserve">
-    <value>Une erreur inconnue est survenue</value>
-  </data>
-  <data name="GetStarted" xml:space="preserve">
-    <value>Commancer</value>
-  </data>
-  <data name="GettingStartedDescription" xml:space="preserve">
-    <value>Cet outils télécharge le contenu de votre compte Neos. Tout dépendant du nombre de contenu, cela peut prendre du temps. Veuillez ne pas interrompre le processus une foit celui-ci initié. Vous serez informé quand il sera terminé.</value>
-  </data>
-  <data name="GroupsAdminIndicator" xml:space="preserve">
-    <value>(Administrateur)</value>
-  </data>
-  <data name="GroupsQuestion" xml:space="preserve">
-    <value>Sélectionez le contenu du groupe à télécharger?</value>
-  </data>
-  <data name="Help" xml:space="preserve">
-    <value>Aide</value>
-  </data>
-  <data name="Information" xml:space="preserve">
-    <value>Information</value>
-  </data>
-  <data name="InventoryWorlds" xml:space="preserve">
-    <value>Inventaire et Mondes</value>
-  </data>
-  <data name="Language" xml:space="preserve">
-    <value>Langue</value>
-  </data>
-  <data name="Login" xml:space="preserve">
-    <value>Connexion</value>
-  </data>
-  <data name="LoginPrompt" xml:space="preserve">
-    <value>Veuillez vous connecter a votre compte Neos.</value>
-  </data>
-  <data name="MessageHistory" xml:space="preserve">
-    <value>Historique de messages</value>
-  </data>
-  <data name="No" xml:space="preserve">
-    <value>Non</value>
-  </data>
-  <data name="NoGroupsFound" xml:space="preserve">
-    <value>Aucun groupes trouvé.</value>
-  </data>
-  <data name="OK" xml:space="preserve">
-    <value>Okay</value>
-  </data>
-  <data name="OpenFolder_Failed" xml:space="preserve">
-    <value>Impossible d'ouvrir le dossier.</value>
-  </data>
-  <data name="OpenFolder_UnsupportedPlatform" xml:space="preserve">
-    <value>Ouvrir un dossier est impossible sur cette platforme. Vous pouvez manuellement naviguer le dossier à: {0}</value>
-  </data>
-  <data name="OpenLogFolder" xml:space="preserve">
-    <value>Ouvrir le dossier log</value>
-  </data>
-  <data name="OTPPrompt" xml:space="preserve">
-    <value>Entrez le mot de passe unique de votre application d'authentication en deux étapes.</value>
-  </data>
-  <data name="OTPWatermark" xml:space="preserve">
-    <value>Mot de passe 2FA</value>
-  </data>
-  <data name="Password" xml:space="preserve">
-    <value>Mot de passe</value>
-  </data>
-  <data name="Pending" xml:space="preserve">
-    <value>En cours</value>
-  </data>
-  <data name="SelectFolder" xml:space="preserve">
-    <value>Sélectionez un dossier</value>
-  </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Paramètres</value>
-  </data>
-  <data name="StartDownload" xml:space="preserve">
-    <value>Initier le téléchargement</value>
-  </data>
-  <data name="StorageRequired" xml:space="preserve">
-    <value>Le téléchargement nécessitera {0} en espace de stockage.</value>
-  </data>
-  <data name="Username" xml:space="preserve">
-    <value>Utilisateur</value>
-  </data>
-  <data name="UserMetadata" xml:space="preserve">
-    <value>Métadonnées Utilisateur</value>
-  </data>
-  <data name="WhatDownload" xml:space="preserve">
-    <value>Que voulez-vous télécharger?</value>
-  </data>
-  <data name="WhereDownload" xml:space="preserve">
-    <value>Destination du téléchargement?</value>
-  </data>
-  <data name="Yes" xml:space="preserve">
-    <value>Oui</value>
-  </data>
-  <data name="DownloadRate" xml:space="preserve">
-    <value>Vitesse (Objets/Mondes par minute)</value>
-  </data>
-  <data name="DownloadComplete" xml:space="preserve">
-    <value>Téléchargement completé!</value>
-  </data>
-  <data name="DownloadReport" xml:space="preserve">
-    <value>Statistiques du téléchargement</value>
-  </data>
-  <data name="DownloadCompleteDescription" xml:space="preserve">
-    <value>Téléchargement completé. Voici un rapport détaillé des statistiques du téléchargement. Une copie à également été écrite dans les fichiers log.</value>
-  </data>
-  <data name="DownloadCompleteRecordFailureDescription" xml:space="preserve">
-    <value>Certain Records ont échoué le téléchargement, leur détails sont écrits ci-dessous, ou vérifiez les logs pour plus d'information.</value>
-  </data>
-  <data name="UserRecords" xml:space="preserve">
-    <value>Records de l'utilisateur</value>
-  </data>
-  <data name="WouldYouLikeToStartAnotherDownload" xml:space="preserve">
-    <value>Initier un autre téléchargement?</value>
-  </data>
-  <data name="FailureReason" xml:space="preserve">
-    <value>Raison de l'échec</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Nom</value>
-  </data>
-  <data name="Owner" xml:space="preserve">
-    <value>Propriétaire</value>
-  </data>
-  <data name="RecordId" xml:space="preserve">
-    <value>Record ID</value>
-  </data>
-  <data name="RecordPath" xml:space="preserve">
-    <value>Destination du Record</value>
+    <value>Jste si jist(a), že chcete stahování zrušit?</value>
   </data>
   <data name="Assets" xml:space="preserve">
-    <value>Assets</value>
+    <value>Assety</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Zrušit</value>
+  </data>
+  <data name="CloudVariableDefinitions" xml:space="preserve">
+    <value>Definice cloudových proměnných</value>
+  </data>
+  <data name="CloudVariableValues" xml:space="preserve">
+    <value>Hodnoty cloudových proměnných</value>
+  </data>
+  <data name="CompleteQuestion" xml:space="preserve">
+    <value>Vaše stahování je dokončeno. Chcete zahájit další?</value>
+  </data>
+  <data name="Contacts" xml:space="preserve">
+    <value>Kontakty</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Další</value>
+  </data>
+  <data name="Disclaimer" xml:space="preserve">
+    <value>Přestože je vynaloženo veškeré možné úsilí, aby bylo z vašeho účtu staženo opravdu vše, může tento program některá data vynechat nebo ztratit. Nejsme proto schopni nabídnout jakoukoliv garanci nebo záruku schopností této aplikace. Toto je v souladu s licencí, ale toto upozornění navíc je zde za účelem transparentnosti.</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>Stahování dokončeno!</value>
+  </data>
+  <data name="DownloadCompleteDescription" xml:space="preserve">
+    <value>Vaše stahování bylo dokončeno. Níže naleznete hlášení detailující některé statistiky ohledně stahování. Jeho kopie je zároveň uložena do logů.</value>
+  </data>
+  <data name="DownloadCompleteRecordFailureDescription" xml:space="preserve">
+    <value>Vaše stahování selhalo obsáhnout některé položky. Jejich detaily naleznete níže, nebo se můžete podívat do logů pro více informací.</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>Probíhá stahování</value>
+  </data>
+  <data name="DownloadRate" xml:space="preserve">
+    <value>Rychlost (předměty/světy za minutu)</value>
+  </data>
+  <data name="DownloadReport" xml:space="preserve">
+    <value>Hlášení o stahování</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Chyba</value>
+  </data>
+  <data name="Errors.BlankPassword" xml:space="preserve">
+    <value>Heslo nemůže být prázdné.</value>
+  </data>
+  <data name="Errors.BlankUsername" xml:space="preserve">
+    <value>Uživatelské jméno nemůže být prázdné.</value>
+  </data>
+  <data name="Errors.CannotSelectFolder" xml:space="preserve">
+    <value>Nelze vybrat složku, zadejte ji manuálně.</value>
+  </data>
+  <data name="Errors.DownloadCancelled" xml:space="preserve">
+    <value>Stahování dat z účtu zrušeno!</value>
+  </data>
+  <data name="Errors.DownloadFailure" xml:space="preserve">
+    <value>Vaše stahování selhalo z důvodu {0}. Pro více detailů si přečtěte logy, a/nebo to zkuste znovu.</value>
+  </data>
+  <data name="Errors.NoFolderSelected" xml:space="preserve">
+    <value>Není vybrána žádná složka.</value>
+  </data>
+  <data name="Errors.NoMainWindow" xml:space="preserve">
+    <value>Nelze nalézt hlavní okno.</value>
+  </data>
+  <data name="Errors.UnexpectedLoginError" xml:space="preserve">
+    <value>Nečekaná chyba při přihlašování.</value>
+  </data>
+  <data name="Errors.UnknownError" xml:space="preserve">
+    <value>Nečekaná chyba</value>
+  </data>
+  <data name="FailureReason" xml:space="preserve">
+    <value>Důvod selhání</value>
+  </data>
+  <data name="GetStarted" xml:space="preserve">
+    <value>Začínáme</value>
+  </data>
+  <data name="GettingStartedDescription" xml:space="preserve">
+    <value>Tento nástroj si klade za cíl stáhnout veškerý obsah Vašeho Neos účtu. Podle toho kolik toho Váš účet obsahuje, může stahování chvíli trvat. Pokuste se prosím proces nijak nepřerušovat po jeho zahájení. Prostě nechte nástroj běžet, dokud nebude stahování hotové.</value>
+  </data>
+  <data name="GroupsAdminIndicator" xml:space="preserve">
+    <value>(admin)</value>
+  </data>
+  <data name="GroupsQuestion" xml:space="preserve">
+    <value>Obsah které skupiny si přejete stáhnout?</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Nápověda</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Informace</value>
+  </data>
+  <data name="InventoryWorlds" xml:space="preserve">
+    <value>Inventář a světy</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Jazyk</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Přihlásit se</value>
+  </data>
+  <data name="LoginPrompt" xml:space="preserve">
+    <value>Přihlašte se prosím do Vašeho účtu Neos.</value>
+  </data>
+  <data name="MessageHistory" xml:space="preserve">
+    <value>Historie zpráv</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Jméno</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Ne</value>
+  </data>
+  <data name="NoGroupsFound" xml:space="preserve">
+    <value>Nebyly nalezeny žádné skupiny.</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="OpenFolder_Failed" xml:space="preserve">
+    <value>Nelze otevřít složku.</value>
+  </data>
+  <data name="OpenFolder_UnsupportedPlatform" xml:space="preserve">
+    <value>Otevírání složky není na této platformě podporováno. Můžete se ručně navigovat do složky na cestě: {0}</value>
+  </data>
+  <data name="OpenLogFolder" xml:space="preserve">
+    <value>Otevřít složku s logy</value>
+  </data>
+  <data name="OTPPrompt" xml:space="preserve">
+    <value>Zadejte prosím Váš kód OTP (one-time password) z aplikace authenticatoru.</value>
+  </data>
+  <data name="OTPWatermark" xml:space="preserve">
+    <value>One-time password</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Vlastník</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Heslo</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Ve frontě</value>
+  </data>
+  <data name="RecordId" xml:space="preserve">
+    <value>ID položky</value>
+  </data>
+  <data name="RecordPath" xml:space="preserve">
+    <value>Cesta položky</value>
+  </data>
+  <data name="SelectFolder" xml:space="preserve">
+    <value>Vybrat složku</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Nastavení</value>
+  </data>
+  <data name="StartDownload" xml:space="preserve">
+    <value>Zahájit stahování</value>
+  </data>
+  <data name="StorageRequired" xml:space="preserve">
+    <value>Stahování zabere minimálně {0} na disku.</value>
+  </data>
+  <data name="UserMetadata" xml:space="preserve">
+    <value>Metadata uživatele</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Uživatelské jméno</value>
+  </data>
+  <data name="UserRecords" xml:space="preserve">
+    <value>Položky uživatele</value>
+  </data>
+  <data name="WhatDownload" xml:space="preserve">
+    <value>Co všechno by jste chtěli stáhnout?</value>
+  </data>
+  <data name="WhereDownload" xml:space="preserve">
+    <value>Kam by jste to chtěli stáhnout?</value>
+  </data>
+  <data name="WithContributionsFrom" xml:space="preserve">
+    <value>S příspěvky od:</value>
+  </data>
+  <data name="WouldYouLikeToStartAnotherDownload" xml:space="preserve">
+    <value>Chtěl(a) by jste zahájit další stahování?</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ano</value>
   </data>
 </root>

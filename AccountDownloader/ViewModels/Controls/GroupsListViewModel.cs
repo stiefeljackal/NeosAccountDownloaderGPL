@@ -12,34 +12,32 @@ using DynamicData.Aggregation;
 
 namespace AccountDownloader.ViewModels
 {
-    public class GroupsListViewModel: ReactiveObject
+    public class GroupsListViewModel : ReactiveObject
     {
-        public ObservableCollection<GroupsListItemViewModel> GroupViewModels { get;}
-
-        public IEnumerable<IGroup> Groups => GroupViewModels.Select(v => v.Group);
+        public ObservableCollection<IGroup> Groups { get; }
 
         [Reactive]
         public bool HasGroups { get; private set; }
 
         [ObservableAsProperty]
-        public long RequiredBytes { get;} = 0;
+        public long RequiredBytes { get; } = 0;
 
         public GroupsListViewModel(IEnumerable<IGroup>? groups = null)
         {
-            GroupViewModels = new ObservableCollection<GroupsListItemViewModel>();
+            Groups = new ObservableCollection<IGroup>();
 
             // If the user is any groups
-            this.WhenAnyValue(x => x.GroupViewModels.Count).Subscribe(x => HasGroups = x > 0);
+            this.WhenAnyValue(x => x.Groups.Count).Subscribe(x => HasGroups = x > 0);
 
             if (groups != null)
                 AddGroups(groups);
 
             // When any group updates its "ShouldDownload" property, re-calculate the required bytes for the group list
-            GroupViewModels
-                .ToObservableChangeSet(x => x.Group.Id)
-                .AutoRefresh(x => x.Group.ShouldDownload)
-                .Filter(x => x.Group.ShouldDownload)
-                .Sum(x => x.Group.RequiredBytes)
+            Groups
+                .ToObservableChangeSet(x => x.Id)
+                .AutoRefresh(x => x.ShouldDownload)
+                .Filter(x => x.ShouldDownload)
+                .Sum(x => x.RequiredBytes)
                 .ToPropertyEx(this, x => x.RequiredBytes);
         }
 
@@ -47,11 +45,12 @@ namespace AccountDownloader.ViewModels
         {
             foreach (IGroup group in groups)
             {
-                GroupViewModels.Add(new GroupsListItemViewModel(group));
+                Groups.Add(group);
             }
         }
 
-        public IEnumerable<IGroup> GetSelectedGroups() {
+        public IEnumerable<IGroup> GetSelectedGroups()
+        {
             return Groups.Where(x => x.ShouldDownload);
         }
 
@@ -62,7 +61,7 @@ namespace AccountDownloader.ViewModels
 
         public override string ToString()
         {
-            return Groups.Select(g => $"{g.Name}: {g.ShouldDownload}").Aggregate(string.Empty,(last, next) => last + " " + next);
+            return Groups.Select(g => $"{g.Name}: {g.ShouldDownload}").Aggregate(string.Empty, (last, next) => last + " " + next);
         }
     }
 }

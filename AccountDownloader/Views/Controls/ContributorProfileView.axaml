@@ -1,0 +1,40 @@
+﻿<!-- TODO: Combine with UserProfileView to make a unified control -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			       xmlns:ad="clr-namespace:AccountDownloader"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AccountDownloader.Views.ContributorProfileView"
+             xmlns:vm="using:AccountDownloader.ViewModels"
+             xmlns:m="using:AccountDownloader.Models"
+             xmlns:vs="using:AccountDownloader.Services"
+             x:DataType="m:Contributor"
+             x:CompileBindings="True">
+  <Grid>
+    <!-- TODO: We can use properties here to provide the H/W -->
+    <StackPanel Orientation="Horizontal" Spacing="5">
+      <Panel Width="34" Height="34">
+        <Border Background="Gold"
+                BorderBrush="Gold"
+                BorderThickness="4"
+                CornerRadius="25">
+          <Image Width="30" Height="30" asyncImageLoader:ImageLoader.Source="{Binding Avatar}">
+            <Image.Clip>
+              <EllipseGeometry Rect="0,0,30,30" />
+            </Image.Clip>
+          </Image>
+        </Border>
+      </Panel>
+      <TextBlock Text="{Binding Name}"
+                 FontSize="20"
+                 TextAlignment="Left"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 TextWrapping="NoWrap"
+                 TextTrimming="CharacterEllipsis"
+                 Width="160"/>
+    </StackPanel>
+  </Grid>
+</UserControl>

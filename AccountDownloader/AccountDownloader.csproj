@@ -9,7 +9,7 @@
     <RootNamespace>AccountDownloader</RootNamespace>
     <AssemblyName>Neos Account Downloader</AssemblyName>
     <Company>GuVAnj8Gv3RJ</Company>
-    <Version>1.5.0</Version>
+    <Version>1.7.0</Version>
 
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
     <GenerateAssemblyVersionAttribute>True</GenerateAssemblyVersionAttribute>
@@ -126,6 +126,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Views\Controls\ContributorProfileView.axaml.cs">
+      <DependentUpon>ContributorProfileView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\DownloadSelectionView.axaml.cs">
       <DependentUpon>DownloadSelectionView.axaml</DependentUpon>
     </Compile>
@@ -142,4 +145,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <Target Name="CopyContributors" BeforeTargets="Build">
+    <CreateItem Include="..\.all-contributorsrc">
+      <Output TaskParameter="Include" ItemName="fixtures" />
+    </CreateItem>
+    <Message Text="Copying Contributors" Importance="High" />
+
+    <Copy SourceFiles="@(fixtures)" DestinationFolder="Assets/" />
+  </Target>
 </Project>

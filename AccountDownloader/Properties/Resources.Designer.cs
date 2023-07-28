@@ -97,6 +97,15 @@ namespace AccountDownloader.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hash.
+        /// </summary>
+        public static string AssetHash {
+            get {
+                return ResourceManager.GetString("AssetHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assets.
         /// </summary>
         public static string Assets {
@@ -160,6 +169,15 @@ namespace AccountDownloader.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to While every effort is made to download everything from your account, this utility may miss or lose some data. As such we&apos;re unable to offer any guarentee or warranty on this application&apos;s ability. This is in line with the License but this additional disclaimer is here in the hopes of transparency..
+        /// </summary>
+        public static string Disclaimer {
+            get {
+                return ResourceManager.GetString("Disclaimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download Complete!.
         /// </summary>
         public static string DownloadComplete {
@@ -169,7 +187,7 @@ namespace AccountDownloader.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your download is complete. Below is a report detailing some statistics from the download. A copy of this has also been written to a log files.
+        ///   Looks up a localized string similar to Your download is complete. Below is a report detailing some statistics from the download. A copy of this has also been written to a log files..
         /// </summary>
         public static string DownloadCompleteDescription {
             get {
@@ -178,7 +196,7 @@ namespace AccountDownloader.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your download failed to aquire some records, you can find their details below, or see the logs for more information..
+        ///   Looks up a localized string similar to Your download failed to aquire some records or assets, you can find their details below, or see the logs for more information..
         /// </summary>
         public static string DownloadCompleteRecordFailureDescription {
             get {
@@ -196,7 +214,7 @@ namespace AccountDownloader.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rate (Items/Worlds per minute).
+        ///   Looks up a localized string similar to Rate (Records per minute).
         /// </summary>
         public static string DownloadRate {
             get {
@@ -322,7 +340,7 @@ namespace AccountDownloader.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This tool downloads your entire Neos account contents. Depending on how much your account contains, this may take a while. Please try not to interrupt this process, once it has started. Just leave it running until it lets you know it is complete..
+        ///   Looks up a localized string similar to This tool aims to download your entire Neos account contents. Depending on how much content your account contains, this may take a while. Please try not to interrupt this process, once it has started. Just leave it running until it lets you know it is complete..
         /// </summary>
         public static string GettingStartedDescription {
             get {
@@ -331,7 +349,7 @@ namespace AccountDownloader.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You can only download groups you are an admin of..
+        ///   Looks up a localized string similar to (admin).
         /// </summary>
         public static string GroupsAdminIndicator {
             get {
@@ -538,6 +556,15 @@ namespace AccountDownloader.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Records.
+        /// </summary>
+        public static string Records {
+            get {
+                return ResourceManager.GetString("Records", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Folder.
         /// </summary>
         public static string SelectFolder {
@@ -615,6 +642,15 @@ namespace AccountDownloader.Properties {
         public static string WhereDownload {
             get {
                 return ResourceManager.GetString("WhereDownload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to With contributions from:.
+        /// </summary>
+        public static string WithContributionsFrom {
+            get {
+                return ResourceManager.GetString("WithContributionsFrom", resourceCulture);
             }
         }
         

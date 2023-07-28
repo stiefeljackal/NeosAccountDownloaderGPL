@@ -454,4 +454,5 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 
 ExternalLibraries/*.dll
+AccountDownloader/Assets/.all-contributorsrc
 CoverageReport
