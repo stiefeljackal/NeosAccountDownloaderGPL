@@ -9,10 +9,15 @@ While every effort is made to download everything from your account, this utilit
 
 Please refer to the [License](LICENSE.md) file for additional commentary.
 
-# FAQ
+# Download
 
-## How do I download this?
-Use the [releases tab](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases) and grab the latest.
+Windows:
+[Neos Account Downloader for Windows (v1.7.0-a)](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases/download/v1.7.0-a/AccountDownloaderWindows-v1.7.0-a.zip)
+
+Linux:
+[Neos Account Downloader for Linux (v1.7.0-a)](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases/download/v1.7.0-a/AccountDownloaderLinux-v1.7.0-a.tar.gz)
+
+# FAQ
 
 ## Why does this exist?
 Backing up Neos content given the current circumstances seemed wise.
