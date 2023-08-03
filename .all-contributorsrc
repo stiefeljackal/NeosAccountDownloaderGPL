@@ -39,7 +39,8 @@
       "profile": "https://github.com/stiefeljackal",
       "contributions": [
         "code",
-        "bug"
+        "bug",
+        "research"
       ]
     },
     {
@@ -114,6 +115,33 @@
       "profile": "https://github.com/rampa3",
       "contributions": [
         "translation"
+      ]
+    },
+    {
+      "login": "ThomFox",
+      "name": "ThomFox",
+      "avatar_url": "https://avatars.githubusercontent.com/u/137287064?v=4",
+      "profile": "https://github.com/ThomFox",
+      "contributions": [
+        "research"
+      ]
+    },
+    {
+      "login": "5H4D0W-X",
+      "name": "5H4D0W-X",
+      "avatar_url": "https://avatars.githubusercontent.com/u/99607717?v=4",
+      "profile": "https://github.com/5H4D0W-X",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "ProbablePrime",
+      "name": "ProbablePrime",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8791132?v=4",
+      "profile": "http://probableprime.co.uk",
+      "contributions": [
+        "bug"
       ]
     }
   ],

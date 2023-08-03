@@ -1,50 +1,19 @@
-﻿using System.Threading.Tasks.Dataflow;
-using System.Text.Json;
-using CloudX.Shared;
-using AccountDownloaderLibrary.Extensions;
-using Medallion.Threading.FileSystem;
+﻿using CloudX.Shared;
 using ConcurrentCollections;
 using System.IO.Abstractions;
-using AccountDownloaderLibrary.Implementations;
-using AccountDownloaderLibrary.Mime;
-using AccountDownloaderLibrary.Mime.Interfaces;
+using System.Threading.Tasks.Dataflow;
+using Medallion.Threading.FileSystem;
 
-namespace AccountDownloaderLibrary;
+namespace AccountDownloaderLibrary.Implementations;
 
-using Extensions;
+using Models;
+using Mime;
+using Mime.Interfaces;
+using System.Text.Json;
+using AccountDownloaderLibrary.Extensions;
 
 public class LocalAccountDataStore : IAccountDataStore, IDisposable
 {
-    readonly struct AssetJob
-    {
-        public readonly NeosDBAsset asset;
-        public readonly Record forRecord;
-        public readonly IAccountDataGatherer source;
-        public readonly RecordStatusCallbacks callbacks;
-
-        public readonly string AssetExtension
-        {
-            get
-            {
-                var hash = asset.Hash;
-                var assetUri = forRecord.AssetURI ?? string.Empty;
-                var thumbnailUri = forRecord.ThumbnailURI ?? string.Empty;
-
-                var neosDbUrl = assetUri.Contains(hash) ? assetUri : (thumbnailUri.Contains(hash) ? thumbnailUri : hash);
-
-                return neosDbUrl.GetFileExtensionFromName();
-            }
-        }
-
-        public AssetJob(Record forRecord, NeosDBAsset asset, IAccountDataGatherer source, RecordStatusCallbacks re)
-        {
-            this.asset = asset;
-            this.source = source;
-            this.callbacks = re;
-            this.forRecord = forRecord;
-        }
-    }
-
     ActionBlock<AssetJob> DownloadProcessor;
     readonly ConcurrentHashSet<string> ScheduledAssets = new();
 
@@ -88,9 +57,10 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
         Config = config;
     }
 
-    public async Task Prepare(CancellationToken token) {
-        var lockFileDirectory = new DirectoryInfo(BasePath);
-        CancelToken = token;
+        public async Task Prepare(CancellationToken token)
+        {
+            var lockFileDirectory = new DirectoryInfo(BasePath);
+            CancelToken = token;
 
         InitDownloadProcessor(CancelToken);
 
@@ -99,14 +69,14 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
         {
             DirectoryLock = await myLock.AcquireAsync(TimeSpan.FromSeconds(5), token);
 
-            if (DirectoryLock != null)
-                return;
+                if (DirectoryLock != null)
+                    return;
+            }
+            catch
+            {
+                throw new DataStoreInUseException("Could not aquire a lock on LocalAccountStore is this path in use by another tool?");
+            }
         }
-        catch 
-        {
-            throw new DataStoreInUseException("Could not aquire a lock on LocalAccountStore is this path in use by another tool?");
-        }
-    }
 
     public async Task Complete()
     {
@@ -149,6 +119,7 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
                 {
                     // If the extensionless asset file exists, then just rename the file.
                     ProgressMessage?.Invoke($"Renaming asset {hash} with extension");
+                    job.callbacks.AssetSkipped(hash);
                     await MoveAsset(GetAssetPath(hash), path).ConfigureAwait(false);
                 }
                 else if(!DoesAssetFileExists(hash))
@@ -391,9 +362,11 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
 
         var job = new AssetJob(record, asset, store, recordStatusCallbacks);
 
-        var diff = new AssetDiff();
-        diff.State = AssetDiff.Diff.Added;
-        diff.Bytes = asset.Bytes;
+            var diff = new AssetDiff
+            {
+                State = AssetDiff.Diff.Added,
+                Bytes = asset.Bytes
+            };
 
         recordStatusCallbacks.AssetToUploadAdded(diff);
 

@@ -466,6 +466,15 @@ namespace AccountDownloader.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open Download Folder.
+        /// </summary>
+        public static string OpenDownloadFolder {
+            get {
+                return ResourceManager.GetString("OpenDownloadFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to open folder..
         /// </summary>
         public static string OpenFolder_Failed {
@@ -579,6 +588,15 @@ namespace AccountDownloader.Properties {
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skipped.
+        /// </summary>
+        public static string Skipped {
+            get {
+                return ResourceManager.GetString("Skipped", resourceCulture);
             }
         }
         

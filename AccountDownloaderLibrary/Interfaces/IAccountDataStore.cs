@@ -51,6 +51,7 @@ namespace AccountDownloaderLibrary
         public Action AssetUploaded;
         public Action AssetJobCompleted;
         public Action<AssetFailure> AssetFailure;
+        public Action<string> AssetSkipped;
     }
 
     public interface IAccountDataGatherer

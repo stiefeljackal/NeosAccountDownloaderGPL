@@ -1,4 +1,5 @@
-﻿using CloudX.Shared;
+﻿using AccountDownloaderLibrary.Implementations;
+using CloudX.Shared;
 using MimeDetective.Storage;
 using Moq;
 using System;

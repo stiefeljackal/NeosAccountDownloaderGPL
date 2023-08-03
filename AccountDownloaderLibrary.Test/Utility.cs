@@ -5,6 +5,7 @@ using SoloX.CodeQuality.Test.Helpers.Http;
 using AccountDownloaderLibrary.Mime.Interfaces;
 using AccountDownloaderLibrary.Mime;
 using System.Text.Json;
+using AccountDownloaderLibrary.Implementations;
 
 namespace AccountDownloaderLibrary.Test;
 

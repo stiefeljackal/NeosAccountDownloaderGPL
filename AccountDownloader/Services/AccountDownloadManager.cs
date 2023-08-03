@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AccountDownloaderLibrary;
+using AccountDownloaderLibrary.Implementations;
 using AccountDownloaderLibrary.Interfaces;
 using Avalonia.Threading;
 using CloudX.Shared;
