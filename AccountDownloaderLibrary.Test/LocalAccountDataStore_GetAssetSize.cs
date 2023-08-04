@@ -21,7 +21,7 @@ public class LocalAccountDataStore_GetAssetSize
         var fsMock = tuple.fsMock;
 
         var mockFileData = Utility.CreateJsonFile(new AssetMetadata(null, string.Empty, mockSize));
-        fsMock.AddFile($"{mockAssetsPath}/{mockHash}.metadata.json", mockFileData);
+        fsMock.AddFile($"{mockAssetsPath}Metadata/{mockHash}.metadata.json", mockFileData);
 
         var size = await tuple.store.GetAssetSize(mockHash);
 

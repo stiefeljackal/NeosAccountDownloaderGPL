@@ -9,6 +9,7 @@ using ReactiveUI.Validation.Contexts;
 using ReactiveUI.Validation.Extensions;
 using System.Reactive.Linq;
 using AccountDownloader.Utilities;
+using AccountDownloaderLibrary.Interfaces;
 
 namespace AccountDownloader.ViewModels;
 
@@ -44,7 +45,9 @@ public class MultiFactorAuthViewModel : ViewModelBase, IValidatableViewModel
             }
             if (result.state == AuthenticationState.Authenticated)
             {
-                await Router.Navigate.Execute(new DownloadSelectionViewModel());
+                var appConfigLoader = Locator.Current.GetService<IAppConfigLoader>();
+
+                await Router.Navigate.Execute(new DownloadSelectionViewModel(appConfigLoader!.LoadAccountDownloadConfig(CloudService.Profile.UserId)));
                 return;
             }
 

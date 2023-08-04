@@ -21,7 +21,7 @@
                            Foreground="White"/>
 	  <TextBlock FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding ProgressPhase}" IsVisible="{Binding ShouldShowPhase}">User Records</TextBlock>
     <v:ProgressStatisticsView HorizontalAlignment="Center" DataContext="{Binding ProgressStatistics}"/>
-    <TextBlock TextWrapping="Wrap" FontSize="15" HorizontalAlignment="Center" Text="{Binding ProgressText}">Test Texssdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfssdfsdfsdfsdfsdfsdfgsdfsdft</TextBlock>
+    <TextBlock TextWrapping="Wrap" FontSize="15" MinHeight="69" HorizontalAlignment="Center" Text="{Binding ProgressText}">Test Texssdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfssdfsdfsdfsdfsdfsdfgsdfsdft an</TextBlock>
 	  <Button HorizontalAlignment="Center" Width="100" Command="{Binding Cancel}">
 		  <TextBlock Text="{x:Static p:Resources.Cancel}" TextAlignment="Center" VerticalAlignment="Center"/>
 	  </Button>

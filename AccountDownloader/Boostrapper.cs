@@ -9,6 +9,10 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using Serilog.Events;
+using AccountDownloaderLibrary.Interfaces;
+using AccountDownloaderLibrary;
+using AccountDownloaderLibrary.Services;
+using System.IO.Abstractions;
 
 namespace AccountDownloader
 {
@@ -16,13 +20,19 @@ namespace AccountDownloader
     {
         public string LogFolder { get; }
 
+        public string DownloadConfigFolder { get; }
+
         public LogEventLevel LogLevel { get; }
         
         public Config(IAssemblyInfoService? info) {
             if (info == null)
                 throw new ArgumentNullException(nameof(info));
 
-            LogFolder = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create),info.CompanyName, info.Name);
+            var appFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create);
+
+            LogFolder = Path.Join(appFolder, info.CompanyName, info.Name);
+
+            DownloadConfigFolder = Path.Join(appFolder, info.CompanyName, info.Name, "DownloadConfigs");
 
 #if DEBUG
             LogLevel = LogEventLevel.Debug;
@@ -63,7 +73,9 @@ namespace AccountDownloader
                 return factory.CreateLogger("Default");
             });
 
+            services.RegisterConstant<IFileSystem>(new FileSystem());
             services.RegisterConstant<ILocaleService>(new LocaleService(resolve.GetService<ILogger>()));
+            services.RegisterConstant<IAppConfigLoader>(new AppConfigLoader(resolve.GetService<IFileSystem>(), resolve.GetService<Config>()!.DownloadConfigFolder));
 
             var version = resolve.GetService<IAssemblyInfoService>();
             // Registering this as non-lazy because it is quite slow to init.

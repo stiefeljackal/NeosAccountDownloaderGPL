@@ -11,7 +11,7 @@ using System.Reactive.Linq;
 using Splat;
 using AccountDownloader.Services;
 using AccountDownloader.Views;
-using MessageBox.Avalonia.Models;
+using MsBox.Avalonia.Models;
 using Avalonia.Media.Imaging;
 using Avalonia;
 using MsBox.Avalonia.Dto;

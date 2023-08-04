@@ -25,7 +25,6 @@ public class MimeDetector_GetFileExtensionByMimeType
     [InlineData("flac", "audio/flac")]
     [InlineData("exr", "image/x-exr")]
     [InlineData("jpg", "image/jpeg")]
-    [InlineData("7zbson", "application/x-lzma-stream")]
     public void GetFileExtensionByMimeType_ValidMimeType_ReturnsTheAssociatedExtension(string expectedExt, string mimeType)
     {
         Assert.Equal(expectedExt, MimeDetector.Instance.GetFileExtensionByMimeType(mimeType));

@@ -21,11 +21,11 @@ public class LocalAccountDataStore_StoreAssetMetadata
         var mockAssetData = new AssetMetadata(mockUri, mockMimeType, mockSize);
 
         var tuple = Utility.CreateLocalAccountDataStoreTuple(assetsPath: mockAssetsPath);
-        tuple.fsMock.AddDirectory(mockAssetsPath);
+        tuple.fsMock.AddDirectory($"{mockAssetsPath}Metadata");
 
         await tuple.store.StoreAssetMetadata(mockAssetData, mockHash);
 
-        var writtenMetadata = JsonSerializer.Deserialize<AssetMetadata>(tuple.fsMock.GetFile($"{mockAssetsPath}/{mockHash}.metadata.json").Contents);
+        var writtenMetadata = JsonSerializer.Deserialize<AssetMetadata>(tuple.fsMock.GetFile($"{mockAssetsPath}Metadata/{mockHash}.metadata.json").Contents);
 
         Assert.Equal(writtenMetadata, mockAssetData);
     }

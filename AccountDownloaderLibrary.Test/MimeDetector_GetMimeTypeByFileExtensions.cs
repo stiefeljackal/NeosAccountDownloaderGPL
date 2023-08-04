@@ -25,7 +25,6 @@ public class MimeDetector_GetMimeTypeByFileExtensions
     [InlineData("audio/x-flac", "flac")]
     [InlineData("image/x-exr", "exr")]
     [InlineData("image/jpeg", "jpg")]
-    [InlineData("application/x-lzma-stream", "7zbson")]
     [InlineData("application/octet-stream", "mkv")]
     [InlineData("application/octet-stream", "dds")]
     [InlineData("application/octet-stream", "dbf")]

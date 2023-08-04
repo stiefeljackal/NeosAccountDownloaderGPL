@@ -10,63 +10,63 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using AccountDownloaderLibrary.Interfaces;
 
-namespace AccountDownloader.ViewModels
-{
-    // This is just to give us another page to look at.
+namespace AccountDownloader.ViewModels;
+
+// This is just to give us another page to look at.
 	public class CompleteViewModel : ViewModelBase
+{
+    public AccountDownloadStatus Status { get; }
+    public IAccountDownloadUserConfig Config { get; }
+
+    public ProgressStatisticsViewModel ProgressStatistics { get; }
+
+    public FailedRecordsViewModel FailedRecords { get; }
+
+    [Reactive]
+    public bool ShouldShowFailureMessage { get; set; } = false;
+
+    public ReactiveCommand<Unit, IRoutableViewModel> StartAnotherDownload { get; }
+    public ReactiveCommand<Unit, Unit> OpenDownloadFolder { get; }
+    public ReactiveCommand<Unit, Unit> Exit { get; }
+    public CompleteViewModel(IAccountDownloadUserConfig config, AccountDownloadStatus status)
     {
-        public AccountDownloadStatus Status { get; }
-        public IAccountDownloadConfig Config { get; }
+        Status = status;
+        Config = config;
+        ProgressStatistics = new ProgressStatisticsViewModel(config, status);
 
-        public ProgressStatisticsViewModel ProgressStatistics { get; }
-
-        public FailedRecordsViewModel FailedRecords { get; }
-
-        [Reactive]
-        public bool ShouldShowFailureMessage { get; set; } = false;
-
-        public ReactiveCommand<Unit, IRoutableViewModel> StartAnotherDownload { get; }
-        public ReactiveCommand<Unit, Unit> OpenDownloadFolder { get; }
-        public ReactiveCommand<Unit, Unit> Exit { get; }
-        public CompleteViewModel(IAccountDownloadConfig config, AccountDownloadStatus status)
+        // Zip up all the records that have failed
+        List<RecordDownloadFailure> list = new(status.UserRecordsStatus.FailedRecords);
+        foreach (var g in Status.GroupStatuses)
         {
-            Status = status;
-            Config = config;
-            ProgressStatistics = new ProgressStatisticsViewModel(config, status);
-
-            // Zip up all the records that have failed
-            List<RecordDownloadFailure> list = new(status.UserRecordsStatus.FailedRecords);
-            foreach (var g in Status.GroupStatuses)
-            {
-                list.AddRange(g.RecordsStatus.FailedRecords);
-            }
-
-            FailedRecords = new FailedRecordsViewModel(list, Status.AssetFailures);
-
-            if (list.Count > 0 || Status.AssetFailures.Count > 0)
-                ShouldShowFailureMessage = true;
-
-            StartAnotherDownload = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new DownloadSelectionViewModel()));
-            OpenDownloadFolder = ReactiveCommand.CreateFromTask(() => OpenDownloadFolderFn());
-            
-            Exit = ReactiveCommand.Create(ExitFn);
-
+            list.AddRange(g.RecordsStatus.FailedRecords);
         }
 
-        private void ExitFn()
-        {
-            //TODO: Test on more exotic os
-            //TODO: should be on view layer
-            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                desktop.Shutdown();
-            }
-        }
+        FailedRecords = new FailedRecordsViewModel(list, Status.AssetFailures);
 
-        public async Task OpenDownloadFolderFn()
+        if (list.Count > 0 || Status.AssetFailures.Count > 0)
+            ShouldShowFailureMessage = true;
+
+        StartAnotherDownload = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new DownloadSelectionViewModel(config)));
+        OpenDownloadFolder = ReactiveCommand.CreateFromTask(() => OpenDownloadFolderFn());
+        
+        Exit = ReactiveCommand.Create(ExitFn);
+
+    }
+
+    private void ExitFn()
+    {
+        //TODO: Test on more exotic os
+        //TODO: should be on view layer
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            await GlobalInteractions.OpenFolderLocation.Handle(Config.FilePath);
+            desktop.Shutdown();
         }
+    }
+
+    public async Task OpenDownloadFolderFn()
+    {
+        await GlobalInteractions.OpenFolderLocation.Handle(Config.FilePath);
     }
 }

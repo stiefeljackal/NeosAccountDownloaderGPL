@@ -17,6 +17,9 @@ public class AppCloudUserProfile : ReactiveObject, IUserProfile
     public string UserName { get; set; } = "Unauthenticated";
 
     [Reactive]
+    public string UserId { get; set; } = "U-";
+
+    [Reactive]
     public Uri PictureURI { get; set; } = AssetHelper.GetUri("AnonymousHeadset.png");
 
     private static ILogger? Logger;
@@ -47,6 +50,7 @@ public class AppCloudUserProfile : ReactiveObject, IUserProfile
             return;
 
         UserName = user.Username;
+        UserId = user.Id;
 
         PictureURI = GetProfilePictureUri(user?.Profile?.IconUrl) ?? AssetHelper.GetUri("AnonymousHeadset.png");
     }

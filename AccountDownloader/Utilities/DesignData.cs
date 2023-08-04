@@ -19,6 +19,9 @@ namespace AccountDownloader
         public string UserName { get; set; }
 
         [Reactive]
+        public string UserId { get; set; }
+
+        [Reactive]
         public Uri? PictureURI { get; set; }
 
         public void UpdateUser(User obj)
@@ -29,6 +32,7 @@ namespace AccountDownloader
         public DesignUserProfile()
         {
             UserName = "User";
+            UserId = "U-UserId";
             PictureURI = AssetHelper.GetUri("AnonymousHeadset.png");
         }
     }

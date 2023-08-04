@@ -61,29 +61,16 @@ namespace AccountDownloader.Services
         public string LatestProgressMessage { get; }
 
         public string? DownloadPhase { get; }
-        public Task<IDownloadResult> Start(IAccountDownloadConfig config);
+        public Task<IDownloadResult> Start(IAccountDownloadUserConfig config);
 
         public AccountDownloadStatus? Status { get; }
         public void Cancel();
     }
 
-    public interface IAccountDownloadConfig: IReactiveNotifyPropertyChanged<IReactiveObject>
-    {
-        public bool UserMetadata { get; }
-        public bool Contacts { get; }
-        public bool MessageHistory { get; }
-        public bool InventoryWorlds { get; }
-        public bool CloudVariableDefinitions { get; }
-        public bool CloudVariableValues { get; }
-
-        public IEnumerable<string> Groups { get; }
-
-        public string FilePath { get; }
-    }
-
     public interface IUserProfile: IReactiveNotifyPropertyChanged<IReactiveObject>
     {
         public string UserName { get; }
+        public string UserId { get; }
         public Uri? PictureURI { get; }
 
         void UpdateUser(User obj);

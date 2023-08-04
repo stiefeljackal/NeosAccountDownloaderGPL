@@ -34,7 +34,7 @@ public class ProgressViewModel : ViewModelBase
     public AccountDownloadStatus? Status => Downloader.Status;
 
     [Reactive]
-    public IAccountDownloadConfig Config { get; private set; }
+    public IAccountDownloadUserConfig Config { get; private set; }
 
     [Reactive]
     public UserProfileViewModel ProfileViewModel { get; set; }
@@ -50,10 +50,13 @@ public class ProgressViewModel : ViewModelBase
     private IAppCloudService CloudService { get; }
     private IAccountDownloader Downloader { get; }
 
-    public ProgressViewModel(IAccountDownloadConfig config)
+    private IAppConfigLoader AppConfigLoader { get; }
+
+    public ProgressViewModel(IAccountDownloadUserConfig config)
     {
         CloudService = Locator.Current.GetService<IAppCloudService>() ?? throw new NullReferenceException("Cannot login without an app service");
         Downloader = Locator.Current.GetService<IAccountDownloader>() ?? throw new NullReferenceException("Cannot download an account without a downloader");
+        AppConfigLoader = Locator.Current.GetService<IAppConfigLoader>() ?? throw new NullReferenceException("Cannot save configs without a config loader");
 
         ProfileViewModel = new UserProfileViewModel(CloudService.Profile);
 
@@ -83,7 +86,7 @@ public class ProgressViewModel : ViewModelBase
         ProgressStatistics = new ProgressStatisticsViewModel(config, Downloader.Status!);
     }
 
-    private async Task StartDownload(IAccountDownloadConfig config)
+    private async Task StartDownload(IAccountDownloadUserConfig config)
     {
         IsRunning = true;
         var res = await Downloader.Start(config);
@@ -93,6 +96,9 @@ public class ProgressViewModel : ViewModelBase
     private async Task DownloadComplete(IDownloadResult result)
     {
         IsRunning = false;
+
+        AppConfigLoader.SaveAccountDownloadConfig(CloudService.Profile.UserId, Config);
+
         switch(result.Result)
         {
             case DownloadResultType.Sucessful:

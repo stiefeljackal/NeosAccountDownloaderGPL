@@ -2,20 +2,20 @@
 using AccountDownloaderLibrary;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using AccountDownloaderLibrary.Interfaces;
 
-namespace AccountDownloader.ViewModels
+namespace AccountDownloader.ViewModels;
+
+public class ProgressStatisticsViewModel : ReactiveObject
 {
-	public class ProgressStatisticsViewModel : ReactiveObject
-	{
-        [Reactive]
-        public IAccountDownloadConfig Config { get; private set; }
-        [Reactive]
-        public AccountDownloadStatus Status { get; private set; }
+    [Reactive]
+    public IAccountDownloadUserConfig Config { get; private set; }
+    [Reactive]
+    public AccountDownloadStatus Status { get; private set; }
 
-        public ProgressStatisticsViewModel(IAccountDownloadConfig config, AccountDownloadStatus status)
-        {
-            Config = config;
-            Status = status;
-        }
+    public ProgressStatisticsViewModel(IAccountDownloadUserConfig config, AccountDownloadStatus status)
+    {
+        Config = config;
+        Status = status;
     }
 }

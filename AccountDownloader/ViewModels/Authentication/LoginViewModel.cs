@@ -9,6 +9,7 @@ using ReactiveUI.Validation.Extensions;
 using Splat;
 using System.Reactive.Linq;
 using AccountDownloader.Utilities;
+using AccountDownloaderLibrary.Interfaces;
 
 namespace AccountDownloader.ViewModels;
 
@@ -37,9 +38,12 @@ public class LoginViewModel : ViewModelBase, IValidatableViewModel
                 await Router.Navigate.Execute(new MultiFactorAuthViewModel());
             // Authenticated, no TOTP, go to next
             else if (result.state == AuthenticationState.Authenticated)
-                await Router.Navigate.Execute(new DownloadSelectionViewModel());
+            {
+                var appConfigLoader = Locator.Current.GetService<IAppConfigLoader>();
+                await Router.Navigate.Execute(new DownloadSelectionViewModel(appConfigLoader!.LoadAccountDownloadConfig(CloudService.Profile.UserId)));
+            }
             // Error, show it
-            else 
+            else
                 await GlobalInteractions.ShowError.Handle(new MessageBoxRequest(result.error ?? Res.Errors_UnexpectedLoginError));
         });
 

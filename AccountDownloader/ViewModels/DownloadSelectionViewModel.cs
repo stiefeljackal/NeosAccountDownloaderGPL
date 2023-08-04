@@ -11,16 +11,22 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using AccountDownloader.Extensions;
+using AccountDownloaderLibrary.Interfaces;
+using AccountDownloaderLibrary.Models;
+using System.Linq;
 
 namespace AccountDownloader.ViewModels;
 
-public class DownloadSelectionViewModel : ViewModelBase, IAccountDownloadConfig
+public class DownloadSelectionViewModel : ViewModelBase, IAccountDownloadUserConfig, IReactiveNotifyPropertyChanged<IReactiveObject>
 {
     public ReactiveCommand<Unit, Unit> OpenFolder { get; }
     public Interaction<FolderPickerOpenOptions, InteractionResult<Uri>> ShowOpenFolderDialog { get; }
     private readonly IAppCloudService CloudService;
     private readonly IGroupsService GroupService;
     private readonly IStorageService StorageService;
+
+    private readonly IEnumerable<string> _previouslySelectedGroups;
+
     public UserProfileViewModel ProfileViewModel { get; }
     public GroupsListViewModel GroupsList { get; }
 
@@ -29,26 +35,27 @@ public class DownloadSelectionViewModel : ViewModelBase, IAccountDownloadConfig
     // IAccountDownloadConfig stuff
     // Is bound from the UI to select what data to download
     [Reactive]
-    public bool UserMetadata { get; set; } = false;
+    public bool UserMetadata { get; set; }
 
     [Reactive]
-    public bool Contacts { get; set; } = false;
+    public bool Contacts { get; set; }
 
     private bool PreviousMessageHistory = false;
-    [Reactive]
-    public bool MessageHistory { get; set; } = false;
 
     [Reactive]
-    public bool InventoryWorlds { get; set; } = false;
+    public bool MessageHistory { get; set; }
 
     [Reactive]
-    public bool CloudVariableDefinitions { get; set; } = false;
+    public bool InventoryWorlds { get; set; }
 
     [Reactive]
-    public bool CloudVariableValues { get; set; } = false;
+    public bool CloudVariableDefinitions { get; set; }
 
     [Reactive]
-    public string FilePath { get; set; } = "";
+    public bool CloudVariableValues { get; set; }
+
+    [Reactive]
+    public string FilePath { get; set; } = string.Empty;
 
     [ObservableAsProperty]
     public long RequiredBytes { get; } = 0;
@@ -56,12 +63,25 @@ public class DownloadSelectionViewModel : ViewModelBase, IAccountDownloadConfig
     [ObservableAsProperty]
     public bool ShouldShowRequiredBytes { get; } = false;
 
+    public short Version { get; set; }
+
     public IStorageRecord UserStorage { get; }
 
     public IEnumerable<string> Groups => GroupsList.GetSelectedGroupIds();
 
-    public DownloadSelectionViewModel()
+    public DownloadSelectionViewModel(IAccountDownloadUserConfig? userConfig = null)
     {
+        // This will allow us to use a persisted user config so that the user does not need to reselect choices again.
+        Version = userConfig?.Version ?? 0;
+        UserMetadata = userConfig?.UserMetadata ?? false;
+        Contacts = userConfig?.Contacts ?? false;
+        MessageHistory = PreviousMessageHistory = userConfig?.MessageHistory ?? false;
+        InventoryWorlds = userConfig?.InventoryWorlds ?? false;
+        CloudVariableDefinitions = userConfig?.CloudVariableDefinitions ?? false;
+        CloudVariableValues = userConfig?.CloudVariableValues ?? false;
+        FilePath = userConfig?.FilePath ?? string.Empty;
+        _previouslySelectedGroups = userConfig?.Groups ?? Array.Empty<string>();
+
         // Most of these will never trigger as our config is static, but Nullables make us do this and I kinda like how it'll point to a config issue.
         CloudService = Locator.Current.GetService<IAppCloudService>() ?? throw new NullReferenceException("Cannot download without an app service");
         GroupService = Locator.Current.GetService<IGroupsService>() ?? throw new NullReferenceException("Cannot download without a group service");
@@ -132,6 +152,12 @@ public class DownloadSelectionViewModel : ViewModelBase, IAccountDownloadConfig
     {
         var groups = await GroupService.GetGroups();
         GroupsList.AddGroups(groups);
+
+        foreach (var group in groups)
+        {
+            // I don't like this. Perhaps there is a better way...
+            group.ShouldDownload = _previouslySelectedGroups.Contains(group.Id);
+        }
     }
 
     private async Task StartDownloadFn()

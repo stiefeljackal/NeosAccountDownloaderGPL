@@ -23,6 +23,7 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
 
     public readonly string BasePath;
     public readonly string AssetsPath;
+    public readonly string AssetsMetadataPath;
     private readonly AccountDownloadConfig Config;
 
     public event Action<string> ProgressMessage;
@@ -52,15 +53,16 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
         UserId = userId;
         BasePath = basePath;
         AssetsPath = assetsPath;
+        AssetsMetadataPath = $"{assetsPath}Metadata";
         _fileSystem = fileSystem;
         _mimeDetector = mimeDetector;
         Config = config;
     }
 
-        public async Task Prepare(CancellationToken token)
-        {
-            var lockFileDirectory = new DirectoryInfo(BasePath);
-            CancelToken = token;
+    public async Task Prepare(CancellationToken token)
+    {
+        var lockFileDirectory = new DirectoryInfo(BasePath);
+        CancelToken = token;
 
         InitDownloadProcessor(CancelToken);
 
@@ -69,14 +71,14 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
         {
             DirectoryLock = await myLock.AcquireAsync(TimeSpan.FromSeconds(5), token);
 
-                if (DirectoryLock != null)
-                    return;
-            }
-            catch
-            {
-                throw new DataStoreInUseException("Could not aquire a lock on LocalAccountStore is this path in use by another tool?");
-            }
+            if (DirectoryLock != null)
+                return;
         }
+        catch
+        {
+            throw new DataStoreInUseException("Could not aquire a lock on LocalAccountStore is this path in use by another tool?");
+        }
+    }
 
     public async Task Complete()
     {
@@ -89,6 +91,7 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
     void InitDownloadProcessor(CancellationToken token)
     {
         _fileSystem.Directory.CreateDirectory(AssetsPath);
+        _fileSystem.Directory.CreateDirectory(AssetsMetadataPath);
 
         DownloadProcessor = new ActionBlock<AssetJob>(async job =>
         {
@@ -327,7 +330,7 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
     string GroupsPath(string ownerId) => Path.Combine(BasePath, ownerId, "Groups");
     string MembersPath(string ownerId, string groupId) => Path.Combine(BasePath, ownerId, "GroupMembers", groupId);
     string GetAssetPath(string hash) => Path.Combine(AssetsPath, hash);
-    string GetAssetMetadataPath(string hash) => $"{GetAssetPath(hash)}.metadata.json";
+    string GetAssetMetadataPath(string hash) => Path.Combine(AssetsMetadataPath, $"{hash}.metadata.json");
 
     public async Task<DateTime> GetLatestMessageTime(string contactId)
     {
@@ -521,9 +524,7 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
     /// <exception cref="FileNotFoundException"></exception>
     private string GetAssetFilename(string hash)
     {
-        var filenames = _fileSystem.Directory.GetFiles(AssetsPath, $"{hash}.*")
-            .Where(filename => !filename.EndsWith(".metadata.json"))
-            .ToArray();
+        var filenames = _fileSystem.Directory.GetFiles(AssetsPath, $"{hash}.*").ToArray();
 
         if (filenames.Length > 1) { throw new MultipleHashExtensionsException(hash); }
         else if (!filenames.Any()) { throw new FileNotFoundException($"File with hash '{hash}' was not found."); }
