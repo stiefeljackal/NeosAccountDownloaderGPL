@@ -102,5 +102,7 @@ namespace AccountDownloaderLibrary
         Task StoreUserMetadata(User user);
         Task StoreContact(Friend friend);
         Task StoreMessage(Message message);
+
+        Task<short> PerformCleanup(short version);
     }
 }

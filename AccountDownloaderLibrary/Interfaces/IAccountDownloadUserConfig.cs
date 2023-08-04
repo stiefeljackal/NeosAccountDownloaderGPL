@@ -6,7 +6,7 @@ namespace AccountDownloaderLibrary.Interfaces;
 public interface IAccountDownloadUserConfig
 {
     [JsonPropertyName("version")]
-    public short Version { get; }
+    public short Version { get; set; }
 
     [JsonPropertyName("migrateUserMetadata")]
     public bool UserMetadata { get; }

@@ -3,6 +3,11 @@
     public class AccountDownloadConfig
     {
         /// <summary>
+        /// The current version of the config.
+        /// </summary>
+        public short Version { get; set; }
+
+        /// <summary>
         /// Should user metadata be downloaded?
         /// </summary>
         public bool DownloadUserMetadata { get; set; } = true;

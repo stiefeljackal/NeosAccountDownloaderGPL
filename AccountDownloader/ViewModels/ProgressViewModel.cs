@@ -129,8 +129,9 @@ public class ProgressViewModel : ViewModelBase
     private async Task HandleSucces()
     {
 
-        await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxRequest(Res.DownloadComplete));
+        AppConfigLoader.SaveAccountDownloadConfig(CloudService.Profile.UserId, Config);
 
+        await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxRequest(Res.DownloadComplete));
         await Router.Navigate.Execute(new CompleteViewModel(Config, Status!));
     }
 

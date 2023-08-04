@@ -158,6 +158,9 @@ namespace AccountDownloaderLibrary
                 Status.Phase = "Waiting for queued jobs to finish";
                 await Target.Complete().ConfigureAwait(false);
 
+                Status.Phase = "Performing final cleanup";
+                Config.Version = await Target.PerformCleanup(Config.Version).ConfigureAwait(false);
+
                 SetProgressMessage("Download complete");
 
                 Status.Phase = "Complete";

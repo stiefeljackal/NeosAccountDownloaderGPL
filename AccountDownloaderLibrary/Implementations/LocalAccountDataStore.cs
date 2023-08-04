@@ -11,9 +11,12 @@ using Mime;
 using Mime.Interfaces;
 using System.Text.Json;
 using AccountDownloaderLibrary.Extensions;
+using BaseX;
 
 public class LocalAccountDataStore : IAccountDataStore, IDisposable
 {
+    private const short INIT_VERSION = 1;
+
     ActionBlock<AssetJob> DownloadProcessor;
     readonly ConcurrentHashSet<string> ScheduledAssets = new();
 
@@ -516,6 +519,29 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
     }
 
     /// <summary>
+    /// Perform any cleanup on the existing store due to a version upgrade of the tool.
+    /// </summary>
+    /// <param name="version">The current version of the account downloader config file.</param>
+    /// <returns></returns>
+    public Task<short> PerformCleanup(short version)
+    {
+        switch(version)
+        {
+            // Sometimes, we must cleanup our mistakes even if they are minor.
+            case INIT_VERSION - 1:
+                var assetFilePaths = _fileSystem.Directory.GetFiles(AssetsPath, "*.metadata.json");
+                foreach(var assetFilePath in assetFilePaths)
+                {
+                    _fileSystem.File.Delete(assetFilePath);
+
+                }
+                return Task.FromResult(INIT_VERSION);
+            default:
+                return Task.FromResult(version);
+        }
+    }
+
+    /// <summary>
     /// Returns the asset filename that is available on the file system.
     /// </summary>
     /// <param name="hash">The file hash id used to search for the filename.</param>
@@ -565,4 +591,5 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
         DownloadProcessor.Complete();
         return Task.CompletedTask;
     }
+
 }

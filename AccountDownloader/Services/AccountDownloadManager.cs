@@ -88,6 +88,8 @@ public class AccountDownloadManager : IAccountDownloader
         if (Status != null)
             Logger.LogInformation(Status.GenerateReport());
 
+        config.Version = libraryConfig.Version;
+
         return res;
     }
 
@@ -122,7 +124,11 @@ public class AccountDownloadManager : IAccountDownloader
 
             // Prevent download of groups that haven't been selected
             DownloadGroups = config.Groups.Any(),
-            GroupsToDownload = new HashSet<string>(config.Groups)
+            GroupsToDownload = new HashSet<string>(config.Groups),
+
+            // Config versions can help perform cleanup if we decide to
+            // change the folder structure.
+            Version = config.Version
         };
 
         return downloadConfig;
