@@ -7,6 +7,8 @@ namespace AccountDownloaderLibrary
 {
     public class CloudAccountDataStore : IAccountDataGatherer
     {
+        private const byte MAX_RECORD_FETCH_ATTEMPTS = 10;
+
         public readonly CloudXInterface Cloud;
 
         public string Name => Cloud.UserAgentProduct + " " + Cloud.UserAgentVersion;
@@ -159,24 +161,24 @@ namespace AccountDownloaderLibrary
                 string lastError = null;
 
                 // Must get the actual record, which will include manifest
-                for (int attempt = 0; attempt < 10; attempt++)
+                for (byte attempt = 0; attempt < MAX_RECORD_FETCH_ATTEMPTS; attempt++)
                 {
                     var result = await Cloud.GetRecord<Record>(ownerId, r.RecordId).ConfigureAwait(false);
 
-                    if (result.Entity == null)
+                    if (result.Entity != null || result.State == HttpStatusCode.NotFound)
                     {
-                        // it was deleted in the meanwhile, just ignore
-                        if (result.State == HttpStatusCode.NotFound)
-                            break;
-
-                        lastError = $"Could not get record: {ownerId}:{r.RecordId}. Result: {result}";
-
-                        // try again
-                        continue;
+                        if (result.Entity != null)
+                        {
+                            yield return result.Entity;
+                        }
+                        // else it was deleted in the meanwhile, just ignore
+                        break;
                     }
 
-                    yield return result.Entity;
-                    break;
+                    if (attempt == MAX_RECORD_FETCH_ATTEMPTS - 1)
+                        lastError = $"Could not get record: {ownerId}:{r.RecordId}. Result: {result}";
+
+                    // try again
                 }
 
                 if (lastError != null)
