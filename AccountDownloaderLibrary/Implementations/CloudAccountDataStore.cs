@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections;
+using System.Net;
 using AccountDownloaderLibrary.Implementations;
 using CloudX.Shared;
 
@@ -143,31 +144,17 @@ namespace AccountDownloaderLibrary
 
         public virtual async IAsyncEnumerable<Record> GetRecords(string ownerId, DateTime? from)
         {
-            var searchParams = new SearchParameters
-            {
-                ByOwner = ownerId,
-                Private = true,
+            var records = new List<Record>();
+            var inventorySrchParams = CreateOwnerBaseSearchParameters(ownerId, from);
+            var featuredWorldsSrchParams = CreateOwnerBaseSearchParameters(ownerId, from);
+            featuredWorldsSrchParams.OnlyFeatured = true;
 
-                SortBy = SearchSortParameter.LastUpdateDate,
-                SortDirection = SearchSortDirection.Descending
-            };
+            //records.AddRange(await SearchRecordsOnCloud(inventorySrchParams));
+            records.AddRange(await SearchRecordsOnCloud(featuredWorldsSrchParams));
 
-            if (from != null)
-                searchParams.MinDate = from.Value;
+            _fetchedRecords[ownerId] = records.Count;
 
-            var search = new RecordSearch<Record>(searchParams, Cloud);
-
-            var count = 0;
-
-            while (search.HasMoreResults)
-            {
-                count += 100;
-                await search.EnsureResults(count);
-            }
-
-            _fetchedRecords[ownerId] = search.Records.Count;
-
-            foreach (var r in search.Records)
+            foreach (var r in records)
             {
                 string lastError = null;
 
@@ -196,6 +183,28 @@ namespace AccountDownloaderLibrary
                     throw new Exception(lastError);
             }
         }
+
+        private async Task<IEnumerable<Record>> SearchRecordsOnCloud(SearchParameters searchParams)
+        {
+            var search = new RecordSearch<Record>(searchParams, Cloud);
+
+            while (search.HasMoreResults)
+            {
+                var count = search.Records.Count + search.BatchSize;
+                await search.EnsureResults(count);
+            }
+
+            return search.Records;
+        }
+
+        private SearchParameters CreateOwnerBaseSearchParameters(string ownerId, DateTime? from) => new SearchParameters
+        {
+            ByOwner = ownerId,
+            Private = true,
+            SortBy = SearchSortParameter.LastUpdateDate,
+            SortDirection = SearchSortDirection.Descending,
+            MinDate = !from.HasValue ? null : from.Value
+        };
 
         public virtual User GetUserMetadata() => Cloud.CurrentUser;
 
