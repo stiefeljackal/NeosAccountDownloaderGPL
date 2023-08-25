@@ -40,7 +40,7 @@ public class AppConfigLoader : IAppConfigLoader
             _fileSystem.Directory.CreateDirectory(DownloadFolderPath);
         }
 
-        using var configFileWriter = _fileSystem.File.OpenWrite(GetUserAccountDownloadConfigPath(userId));
+        using var configFileWriter = _fileSystem.File.Open(GetUserAccountDownloadConfigPath(userId), FileMode.Create);
         JsonSerializer.Serialize(configFileWriter, config);
     }
 
