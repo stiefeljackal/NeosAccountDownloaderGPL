@@ -47,7 +47,7 @@ public class MultiFactorAuthViewModel : ViewModelBase, IValidatableViewModel
             {
                 var appConfigLoader = Locator.Current.GetService<IAppConfigLoader>();
 
-                await Router.Navigate.Execute(new DownloadSelectionViewModel(appConfigLoader!.LoadAccountDownloadConfig(CloudService.Profile.UserId)));
+                await Router.Navigate.Execute(new DownloadSelectionViewModel(appConfigLoader!.LoadAccountDownloadConfigProfile(CloudService.Profile.UserId)));
                 return;
             }
 

@@ -61,7 +61,7 @@ namespace AccountDownloader.Services
         public string LatestProgressMessage { get; }
 
         public string? DownloadPhase { get; }
-        public Task<IDownloadResult> Start(IAccountDownloadUserConfig config);
+        public Task<IDownloadResult> Start(IAccountDownloadUserConfigProfile config);
 
         public AccountDownloadStatus? Status { get; }
         public void Cancel();

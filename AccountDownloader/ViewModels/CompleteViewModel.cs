@@ -18,7 +18,7 @@ namespace AccountDownloader.ViewModels;
 	public class CompleteViewModel : ViewModelBase
 {
     public AccountDownloadStatus Status { get; }
-    public IAccountDownloadUserConfig Config { get; }
+    public IAccountDownloadUserConfigProfile Config { get; }
 
     public ProgressStatisticsViewModel ProgressStatistics { get; }
 
@@ -30,7 +30,7 @@ namespace AccountDownloader.ViewModels;
     public ReactiveCommand<Unit, IRoutableViewModel> StartAnotherDownload { get; }
     public ReactiveCommand<Unit, Unit> OpenDownloadFolder { get; }
     public ReactiveCommand<Unit, Unit> Exit { get; }
-    public CompleteViewModel(IAccountDownloadUserConfig config, AccountDownloadStatus status)
+    public CompleteViewModel(IAccountDownloadUserConfigProfile config, AccountDownloadStatus status)
     {
         Status = status;
         Config = config;

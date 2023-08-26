@@ -8,8 +8,8 @@ namespace AccountDownloaderLibrary.Interfaces
 {
     public interface IAppConfigLoader
     {
-        public IAccountDownloadUserConfig LoadAccountDownloadConfig(string userId);
+        public IAccountDownloadUserConfigProfile LoadAccountDownloadConfigProfile(string userId);
 
-        public void SaveAccountDownloadConfig(string userId, IAccountDownloadUserConfig config);
+        public void SaveAccountDownloadConfigProfile(string userId, IAccountDownloadUserConfigProfile config);
     }
 }

@@ -40,7 +40,7 @@ public class LoginViewModel : ViewModelBase, IValidatableViewModel
             else if (result.state == AuthenticationState.Authenticated)
             {
                 var appConfigLoader = Locator.Current.GetService<IAppConfigLoader>();
-                await Router.Navigate.Execute(new DownloadSelectionViewModel(appConfigLoader!.LoadAccountDownloadConfig(CloudService.Profile.UserId)));
+                await Router.Navigate.Execute(new DownloadSelectionViewModel(appConfigLoader!.LoadAccountDownloadConfigProfile(CloudService.Profile.UserId)));
             }
             // Error, show it
             else

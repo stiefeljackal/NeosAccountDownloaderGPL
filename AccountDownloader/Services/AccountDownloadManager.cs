@@ -66,7 +66,7 @@ public class AccountDownloadManager : IAccountDownloader
         }
     }
 
-    public async Task<IDownloadResult> Start(IAccountDownloadUserConfig config)
+    public async Task<IDownloadResult> Start(IAccountDownloadUserConfigProfile config)
     {
         this.Logger.LogInformation("Starting download for {user}", Interface.CurrentUser.Username);
         this.Logger.LogInformation("Saving output to {filePath}", config.FilePath);
@@ -111,7 +111,7 @@ public class AccountDownloadManager : IAccountDownloader
         return result;
     }
 
-    private static AccountDownloadConfig CreateConfigFromIAccountDownloadConfig(IAccountDownloadUserConfig config)
+    private static AccountDownloadConfig CreateConfigFromIAccountDownloadConfig(IAccountDownloadUserConfigProfile config)
     {
         var downloadConfig = new AccountDownloadConfig
         {

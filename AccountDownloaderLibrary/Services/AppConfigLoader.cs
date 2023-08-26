@@ -23,17 +23,17 @@ public class AppConfigLoader : IAppConfigLoader
         _fileSystem = fileSystem;
     }
 
-    public IAccountDownloadUserConfig LoadAccountDownloadConfig(string userId)
+    public IAccountDownloadUserConfigProfile LoadAccountDownloadConfigProfile(string userId)
     {
         var filePath = GetUserAccountDownloadConfigPath(userId);
         if (!_fileSystem.File.Exists(filePath)) { return null; }
 
         using var configFileReader = _fileSystem.File.OpenRead(filePath);
 
-        return JsonSerializer.Deserialize<AccountDownloadUserConfig>(configFileReader);
+        return JsonSerializer.Deserialize<AccountDownloadUserConfigProfile>(configFileReader);
     }
 
-    public void SaveAccountDownloadConfig(string userId, IAccountDownloadUserConfig config)
+    public void SaveAccountDownloadConfigProfile(string userId, IAccountDownloadUserConfigProfile config)
     {
         if (!_fileSystem.Directory.Exists(DownloadFolderPath))
         {

@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace AccountDownloader.ViewModels;
 
-public class DownloadSelectionViewModel : ViewModelBase, IAccountDownloadUserConfig, IReactiveNotifyPropertyChanged<IReactiveObject>
+public class DownloadSelectionViewModel : ViewModelBase, IAccountDownloadUserConfigProfile, IReactiveNotifyPropertyChanged<IReactiveObject>
 {
     public ReactiveCommand<Unit, Unit> OpenFolder { get; }
     public Interaction<FolderPickerOpenOptions, InteractionResult<Uri>> ShowOpenFolderDialog { get; }
@@ -69,7 +69,7 @@ public class DownloadSelectionViewModel : ViewModelBase, IAccountDownloadUserCon
 
     public IEnumerable<string> Groups => GroupsList.GetSelectedGroupIds();
 
-    public DownloadSelectionViewModel(IAccountDownloadUserConfig? userConfig = null)
+    public DownloadSelectionViewModel(IAccountDownloadUserConfigProfile? userConfig = null)
     {
         // This will allow us to use a persisted user config so that the user does not need to reselect choices again.
         Version = userConfig?.Version ?? 0;

@@ -34,7 +34,7 @@ public class ProgressViewModel : ViewModelBase
     public AccountDownloadStatus? Status => Downloader.Status;
 
     [Reactive]
-    public IAccountDownloadUserConfig Config { get; private set; }
+    public IAccountDownloadUserConfigProfile Config { get; private set; }
 
     [Reactive]
     public UserProfileViewModel ProfileViewModel { get; set; }
@@ -52,7 +52,7 @@ public class ProgressViewModel : ViewModelBase
 
     private IAppConfigLoader AppConfigLoader { get; }
 
-    public ProgressViewModel(IAccountDownloadUserConfig config)
+    public ProgressViewModel(IAccountDownloadUserConfigProfile config)
     {
         CloudService = Locator.Current.GetService<IAppCloudService>() ?? throw new NullReferenceException("Cannot login without an app service");
         Downloader = Locator.Current.GetService<IAccountDownloader>() ?? throw new NullReferenceException("Cannot download an account without a downloader");
@@ -86,7 +86,7 @@ public class ProgressViewModel : ViewModelBase
         ProgressStatistics = new ProgressStatisticsViewModel(config, Downloader.Status!);
     }
 
-    private async Task StartDownload(IAccountDownloadUserConfig config)
+    private async Task StartDownload(IAccountDownloadUserConfigProfile config)
     {
         IsRunning = true;
         var res = await Downloader.Start(config);
@@ -97,7 +97,7 @@ public class ProgressViewModel : ViewModelBase
     {
         IsRunning = false;
 
-        AppConfigLoader.SaveAccountDownloadConfig(CloudService.Profile.UserId, Config);
+        AppConfigLoader.SaveAccountDownloadConfigProfile(CloudService.Profile.UserId, Config);
 
         switch(result.Result)
         {
@@ -129,7 +129,7 @@ public class ProgressViewModel : ViewModelBase
     private async Task HandleSucces()
     {
 
-        AppConfigLoader.SaveAccountDownloadConfig(CloudService.Profile.UserId, Config);
+        AppConfigLoader.SaveAccountDownloadConfigProfile(CloudService.Profile.UserId, Config);
 
         await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxRequest(Res.DownloadComplete));
         await Router.Navigate.Execute(new CompleteViewModel(Config, Status!));

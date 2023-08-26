@@ -47,7 +47,7 @@ namespace AccountDownloader.Views
             });
             
 #if DEBUG
-            this.AttachDevTools();
+            //this.AttachDevTools();
 #endif
             AvaloniaXamlLoader.Load(this);
 
