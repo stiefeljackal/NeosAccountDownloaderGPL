@@ -151,7 +151,7 @@ namespace AccountDownloaderLibrary
             var featuredWorldsSrchParams = CreateOwnerBaseSearchParameters(ownerId, from);
             featuredWorldsSrchParams.OnlyFeatured = true;
 
-            //records.AddRange(await SearchRecordsOnCloud(inventorySrchParams));
+            records.AddRange(await SearchRecordsOnCloud(inventorySrchParams));
             records.AddRange(await SearchRecordsOnCloud(featuredWorldsSrchParams));
 
             _fetchedRecords[ownerId] = records.Count;
