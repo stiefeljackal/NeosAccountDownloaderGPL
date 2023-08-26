@@ -138,6 +138,10 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
 
                     ProgressMessage?.Invoke($"Finished download {hash}");
                 }
+                else
+                {
+                    job.callbacks.AssetSkipped(hash);
+                }
 
                 job.callbacks.AssetUploaded?.Invoke();
             }
