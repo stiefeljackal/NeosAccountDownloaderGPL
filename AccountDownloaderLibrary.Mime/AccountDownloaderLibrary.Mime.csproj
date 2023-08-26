@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Mime-Detective.Definitions.Exhaustive" Version="23.6.1" />
-    <PackageReference Include="System.IO.Abstractions" Version="19.2.29" />
+    <PackageReference Include="System.IO.Abstractions" Version="19.2.67" />
   </ItemGroup>
 
 </Project>
