@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AccountDownloaderLibrary.Models;
 
-public class AccountDownloadUserConfig : IAccountDownloadUserConfig
+public class AccountDownloadUserConfigProfile : IAccountDownloadUserConfigProfile
 {
     [JsonPropertyName("version")]
     public short Version { get; set; }

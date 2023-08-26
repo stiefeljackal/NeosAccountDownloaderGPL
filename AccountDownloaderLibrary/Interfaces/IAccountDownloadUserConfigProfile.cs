@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace AccountDownloaderLibrary.Interfaces;
 
-public interface IAccountDownloadUserConfig
+public interface IAccountDownloadUserConfigProfile
 {
     [JsonPropertyName("version")]
     public short Version { get; set; }
