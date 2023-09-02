@@ -1,4 +1,4 @@
-﻿# Neos Account Downloader (Stiefel's Version)
+﻿# Stiefel's Version of Neos Account Downloader
 
 **This is not the same repository of the Neos Account Downloader devloped by GuVAnj8Gv3RJ. This is a forked repository that includes additional features missing from the original tool that are in high demand by Neos users and features that GuVA is still implementing. If you prefer to download the original Neos Account Downloader, you may visit GuVA's repository at https://github.com/GuVAnj8Gv3RJ/NeosAccountDownloader. All FAQs from GuVA's README will be listed here in addtion to ones that I will list.**
 
@@ -12,12 +12,28 @@ Please refer to the [License](LICENSE.md) file for additional commentary.
 # Download
 
 Windows:
-[Neos Account Downloader for Windows (v1.7.0-a)](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases/download/v1.7.0-a/AccountDownloaderWindows-v1.7.0-a.zip)
+[Neos Account Downloader for Windows (v2023.9.1)](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases/download/v2023.9.1/AccountDownloaderWindows-v2023.9.1.zip)
 
 Linux:
-[Neos Account Downloader for Linux (v1.7.0-a)](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases/download/v1.7.0-a/AccountDownloaderLinux-v1.7.0-a.tar.gz)
+[Neos Account Downloader for Linux (v2023.9.1)](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases/download/v2023.9.1/AccountDownloaderLinux-v2023.9.1.tar.gz)
 
-# FAQ
+# Additional Features
+
+Based on review of the original repository, this tool contains changes from [1.10.2](https://github.com/GuVAnj8Gv3RJ/NeosAccountDownloader/releases/tag/v1.10.2) that was released by GuVA. However, the following major changes have not been added:
+
+- File Extensions - Stiefel's version of implementing file extensions is different from GuVA's. It is also another reason why this repository did not incorporate GuVA's changes from versions 1.8.0 and 1.10.1 until this point due to the different logic to determine file extensions.
+
+All third party libraries are also up-to-date at the time of writing. In addition, the following changes are in place:
+
+- Featured world records are being gathered.
+- BMPCUBE file types are accounted for.
+- Record information and assets are being downloaded at the same time as the tool continues to search for records.
+- Group-only record selections will show the **Inventory & World** and **Assets** progress.
+- Additional asset metadata is saved. This includes the asset's MIME type, Neos location, and file size.
+- Persistent user selections (will be changing to be folder specific, but keeping it here for now).
+  - **Known Issue**: If the download button is still disabled, you may need to check/uncheck an option to enable it. I am looking into it.
+
+# FAQ (from GuVAnj8Gv3RJ)
 
 ## How do I download this?
 Follow the instructions above.
@@ -55,13 +71,6 @@ This diagram might help:
 - Assets: Anything that makes up an element in Neos that is not the structure of it within the inspector. So Image,Sounds,Videos,Model Files. These are downloaded incrementally
 - Records: Records contain a manifest of all assets that are required to represent an item or world. These are downloaded each time.
 - Everything Else: JSON Soup. Just JSON Files of various types. Contacts, Messages etc. These are downloaded each time.
-
-# Additional Features
-
-This tool is an enhanced version of [1.7.0](https://github.com/GuVAnj8Gv3RJ/NeosAccountDownloader/releases/tag/v1.7.0) that was released by GuVA. In addition to what was released in that version, the following are present in 1.7.0-a:
-
-- Almost 99% of assets downloaded will have their appropriate file extension instead of no extension.
-- Additional asset metadata is saved. This includes the asset's MIME type, file extension, and file size.
 
 # Known Issues
 
@@ -108,3 +117,23 @@ Please feel free to contribute to this repository if you would like. Please keep
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+# Contributors from this Repository
+
+Thank you to the following people who contributed towards this repository!
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/Edward205">
+          <img src="https://avatars.githubusercontent.com/u/52004020?s=100&v=4" width="100px;" alt="Edward205">
+          <br>
+          <strong>Edward205</strong>
+          <br>
+        </a>
+        Translation (Romanian)
+      </td>
+    </tr>
+  </tbody>
+</table>

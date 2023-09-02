@@ -41,7 +41,14 @@
       </TextBlock>
       <TextBlock HorizontalAlignment="Left">
         <TextBlock.Text>
-          <MultiBinding StringFormat="{}Originally By {0}">
+          <MultiBinding StringFormat="{}By {0}">
+            <Binding Path="AppCompany" />
+          </MultiBinding>
+        </TextBlock.Text>
+      </TextBlock>
+      <TextBlock HorizontalAlignment="Left">
+        <TextBlock.Text>
+          <MultiBinding StringFormat="{}Originally By GuVAnj8Gv3RJ (defined in MIT License)">
             <Binding Path="AppCompany" />
           </MultiBinding>
         </TextBlock.Text>
