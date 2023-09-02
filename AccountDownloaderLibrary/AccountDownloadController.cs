@@ -2,6 +2,7 @@
 using CloudX.Shared;
 using AccountDownloaderLibrary.Extensions;
 using AccountDownloaderLibrary.Interfaces;
+using AccountDownloaderLibrary.Models;
 
 namespace AccountDownloaderLibrary
 {
@@ -325,28 +326,7 @@ namespace AccountDownloaderLibrary
 
         public async Task DownloadRecords(string ownerId, RecordDownloadStatus status, bool onlyNew, CancellationToken cancellationToken)
         {
-            DateTime? latest = null;
-
-            if (onlyNew)
-            {
-                latest = await Target.GetLatestRecordTime(ownerId).ConfigureAwait(false);
-
-                if (latest != null)
-                {
-                    try
-                    {
-                        latest = latest.Value.AddDays(-1);
-                    }
-                    catch
-                    {
-                        latest = null;
-                    }
-                }
-            }
-
-            string latestText = onlyNew ? $" from {latest}" : "";
-
-            SetProgressMessage($"Downloading records for {ownerId}" + latestText);
+            SetProgressMessage($"Downloading records for {ownerId}");
 
             int count = 0;
 
@@ -377,7 +357,7 @@ namespace AccountDownloaderLibrary
                     EnsureOrdered = false
                 });
 
-            await foreach (var record in Source.GetRecords(ownerId, latest).ConfigureAwait(false))
+            await foreach (var record in Source.GetRecords(ownerId).ConfigureAwait(false))
             {
                 SetProgressMessage($"Queueing: {record.CombinedRecordId}");
                 if (cancellationToken.IsCancellationRequested)

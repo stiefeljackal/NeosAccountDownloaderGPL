@@ -182,7 +182,7 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
         return await Task.FromResult(GetEntity<Record>(Path.Combine(RecordsPath(ownerId), recordId)));
     }
 
-    public async IAsyncEnumerable<Record> GetRecords(string ownerId, DateTime? from)
+    public async IAsyncEnumerable<Record> GetRecords(string ownerId)
     {
         var records = await GetEntities<Record>(RecordsPath(ownerId)).ConfigureAwait(false);
 
@@ -190,8 +190,9 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
 
         foreach (var record in records)
         {
-            if (from != null && record.LastModificationTime < from.Value)
-                continue;
+            // We will be replacing this with something else
+            //if (minDate.HasValue && record.LastModificationTime < minDate.Value)
+            //    continue;
 
             yield return record;
         }
@@ -356,7 +357,7 @@ public class LocalAccountDataStore : IAccountDataStore, IDisposable
     {
         DateTime? latest = null;
 
-        await foreach (var record in GetRecords(ownerId, null).ConfigureAwait(false))
+        await foreach (var record in GetRecords(ownerId).ConfigureAwait(false))
         {
             if (latest == null || record.LastModificationTime > latest)
                 latest = record.LastModificationTime;

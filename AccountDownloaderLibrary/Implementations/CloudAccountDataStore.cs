@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Net;
 using AccountDownloaderLibrary.Implementations;
+using AccountDownloaderLibrary.Interfaces;
+using AccountDownloaderLibrary.Models;
+using AccountDownloaderLibrary.NeosSearch;
 using CloudX.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace AccountDownloaderLibrary
 {
@@ -10,6 +14,8 @@ namespace AccountDownloaderLibrary
         private const byte MAX_RECORD_FETCH_ATTEMPTS = 10;
 
         public readonly CloudXInterface Cloud;
+
+        private readonly IRecordSearcher _recordSearcher;
 
         public string Name => Cloud.UserAgentProduct + " " + Cloud.UserAgentVersion;
         public string UserId => Cloud.CurrentUser.Id;
@@ -39,13 +45,16 @@ namespace AccountDownloaderLibrary
             return count;
         }
 
-        public CloudAccountDataStore(CloudXInterface cloud, AccountDownloadConfig config) : this(cloud, new HttpClient { Timeout = WEB_CLIENT_DEFAULT_TIMEOUT  }, config) { }
+        public CloudAccountDataStore(CloudXInterface cloud, IRecordSearcher recordSearcher, AccountDownloadConfig config) : this(cloud, recordSearcher, new HttpClient { Timeout = WEB_CLIENT_DEFAULT_TIMEOUT  }, config) { }
 
-        public CloudAccountDataStore(CloudXInterface cloud, HttpClient client, AccountDownloadConfig config)
+        public CloudAccountDataStore(CloudXInterface cloud, IRecordSearcher recordSearcher, HttpClient client, AccountDownloadConfig config)
         {
-            this.Cloud = cloud;
-            this.Config = config;
-            this.WebClient = client;
+            Cloud = cloud;
+            Config = config;
+            WebClient = client;
+            _recordSearcher = recordSearcher;
+
+            _recordSearcher.SearchResultSizeUpdate += OnRecordsReceivedFromCloud;
         }
 
         public virtual async Task Prepare(CancellationToken token)
@@ -144,30 +153,39 @@ namespace AccountDownloaderLibrary
             return result.Entity;
         }
 
-        public virtual async IAsyncEnumerable<Record> GetRecords(string ownerId, DateTime? from)
+        public virtual async IAsyncEnumerable<Record> GetRecords(string ownerId)
         {
-            var records = new List<Record>();
-            var inventorySrchParams = CreateOwnerBaseSearchParameters(ownerId, from);
-            var featuredWorldsSrchParams = CreateOwnerBaseSearchParameters(ownerId, from);
-            featuredWorldsSrchParams.OnlyFeatured = true;
+            var searchParametersArr = new SearchParameters[]
+            {
+                CreateRecordOwnerSearchParameters(ownerId),
+                CreateRecordOwnerSearchParameters(ownerId, true)
+            };
 
-            records.AddRange(await SearchRecordsOnCloud(inventorySrchParams));
-            records.AddRange(await SearchRecordsOnCloud(featuredWorldsSrchParams));
+            foreach(var searchParam in searchParametersArr)
+            {
+                await foreach (var record in GetRecordsFromNeosCloud(ownerId, searchParam).ConfigureAwait(false))
+                {
+                    yield return record;
+                }
+            }
 
-            _fetchedRecords[ownerId] = records.Count;
+        }
 
-            foreach (var r in records)
+        private async IAsyncEnumerable<Record> GetRecordsFromNeosCloud(string ownerId, SearchParameters searchParameters)
+        {
+            await foreach (var recordId in _recordSearcher.PerformSearch(searchParameters).ConfigureAwait(false))
             {
                 string lastError = null;
 
                 // Must get the actual record, which will include manifest
                 for (byte attempt = 0; attempt < MAX_RECORD_FETCH_ATTEMPTS; attempt++)
                 {
-                    var result = await Cloud.GetRecord<Record>(ownerId, r.RecordId).ConfigureAwait(false);
+                    var result = await Cloud.GetRecord<Record>(ownerId, recordId).ConfigureAwait(false);
+                    var hasEntity = result.Entity != null;
 
-                    if (result.Entity != null || result.State == HttpStatusCode.NotFound)
+                    if (hasEntity || result.State == HttpStatusCode.NotFound)
                     {
-                        if (result.Entity != null)
+                        if (hasEntity)
                         {
                             yield return result.Entity;
                         }
@@ -176,7 +194,7 @@ namespace AccountDownloaderLibrary
                     }
 
                     if (attempt == MAX_RECORD_FETCH_ATTEMPTS - 1)
-                        lastError = $"Could not get record: {ownerId}:{r.RecordId}. Result: {result}";
+                        lastError = $"Could not get record: {ownerId}:{recordId}. Result: {result}";
 
                     // try again
                 }
@@ -199,10 +217,11 @@ namespace AccountDownloaderLibrary
             return search.Records;
         }
 
-        private SearchParameters CreateOwnerBaseSearchParameters(string ownerId, DateTime? from) => new SearchParameters
+        private SearchParameters CreateRecordOwnerSearchParameters(string ownerId, bool isFeatured = false, bool isPrivate = true, DateTime? from = null) => new SearchParameters
         {
             ByOwner = ownerId,
-            Private = true,
+            Private = isPrivate,
+            OnlyFeatured = isFeatured,
             SortBy = SearchSortParameter.LastUpdateDate,
             SortDirection = SearchSortDirection.Descending,
             MinDate = !from.HasValue ? null : from.Value
@@ -353,6 +372,22 @@ namespace AccountDownloaderLibrary
             var assetContentResponse = assetResponseTask.Result.Content;
             var headers = assetContentResponse.Headers;
             return headers.Contains("Content-Type") ? headers.GetValues("Content-Type").FirstOrDefault() : string.Empty;
+        }
+
+        private void OnRecordsReceivedFromCloud(object sender, RecordsReceivedEventArgs @event)
+        {
+            var ownerId = @event.OwnerId;
+
+
+            lock (_fetchedRecords)
+            {
+                if (!_fetchedRecords.ContainsKey(ownerId))
+                {
+                    _fetchedRecords[ownerId] = 0;
+                }
+
+                _fetchedRecords[ownerId] += @event.RetrievedSize;
+            }
         }
     }
 }

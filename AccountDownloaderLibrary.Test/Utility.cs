@@ -6,6 +6,7 @@ using AccountDownloaderLibrary.Mime.Interfaces;
 using AccountDownloaderLibrary.Mime;
 using System.Text.Json;
 using AccountDownloaderLibrary.Implementations;
+using AccountDownloaderLibrary.Interfaces;
 
 namespace AccountDownloaderLibrary.Test;
 
@@ -20,7 +21,8 @@ internal static class Utility
 
         Mock<CloudXInterface> cloudXInterfaceMock = new (MockBehavior.Loose, "uid:abc123", "CloudX", "0.0.0.0", false);
         Mock<AccountDownloadConfig> configMock = new();
-        CloudAccountDataStore store = new (cloudXInterfaceMock.Object, assetsClient, configMock.Object);
+        Mock<IRecordSearcher> recordSearchMock = new();
+        CloudAccountDataStore store = new (cloudXInterfaceMock.Object, recordSearchMock.Object, assetsClient, configMock.Object);
 
         if (cloudXApiClient != null)
         {

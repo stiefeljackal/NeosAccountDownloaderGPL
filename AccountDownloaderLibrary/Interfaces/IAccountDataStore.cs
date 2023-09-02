@@ -1,4 +1,5 @@
-﻿using CloudX.Shared;
+﻿using AccountDownloaderLibrary.Models;
+using CloudX.Shared;
 
 namespace AccountDownloaderLibrary
 {
@@ -81,7 +82,7 @@ namespace AccountDownloaderLibrary
         IAsyncEnumerable<GroupData> GetGroups();
         Task<List<MemberData>> GetMembers(string groupId);
         Task<Record> GetRecord(string ownerId, string recordId);
-        IAsyncEnumerable<Record> GetRecords(string ownerId, DateTime? from);
+        IAsyncEnumerable<Record> GetRecords(string ownerId);
         User GetUserMetadata();
         Task<List<Friend>> GetContacts();
         IAsyncEnumerable<Message> GetMessages(string contactId, DateTime? from);
