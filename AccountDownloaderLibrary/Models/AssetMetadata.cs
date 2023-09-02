@@ -25,7 +25,7 @@ public struct AssetMetadata
     /// <summary>
     /// The file extension of the asset.
     /// </summary>
-    [JsonPropertyName("extension")]
+    [JsonIgnore]
     public string Extension { get; set; }
 
     /// <summary>
