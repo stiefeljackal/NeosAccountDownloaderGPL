@@ -11,6 +11,8 @@ readonly struct AssetJob
     public readonly IAccountDataGatherer source;
     public readonly RecordStatusCallbacks callbacks;
 
+    public string RecordType { get => forRecord.RecordType; }
+
     public readonly string AssetExtension
     {
         get
@@ -18,10 +20,18 @@ readonly struct AssetJob
             var hash = asset.Hash;
             var assetUri = forRecord.AssetURI ?? string.Empty;
             var thumbnailUri = forRecord.ThumbnailURI ?? string.Empty;
+            var isAssetUri = assetUri.Contains(hash);
 
-            var neosDbUrl = assetUri.Contains(hash) ? assetUri : (thumbnailUri.Contains(hash) ? thumbnailUri : hash);
+            var neosDbUrl = isAssetUri ? assetUri : (thumbnailUri.Contains(hash) ? thumbnailUri : hash);
 
-            return neosDbUrl.GetFileExtensionFromName();
+            var ext = neosDbUrl.GetFileExtensionFromName();
+
+            if (string.IsNullOrEmpty(ext) && isAssetUri && (RecordType == "world" || RecordType == "object"))
+            {
+                ext = "7zbson";
+            }
+
+            return ext != string.Empty ? ext : null;
         }
     }
 
