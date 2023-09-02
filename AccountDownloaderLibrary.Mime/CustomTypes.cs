@@ -43,4 +43,21 @@ public class CustomTypes
                 }.ToSignature()
             },
         }.ToImmutableArray();
+
+    /// <summary>
+    /// Create a bmpcube definition that can be used to analyze bmpcube files.
+    /// </summary>
+    /// <returns>The bmpcube file type definition.</returns>
+    public static ImmutableArray<Definition> BMPCUBE() =>
+        new List<Definition>() {
+            new() {
+                File = new() {
+                    Extensions = new[]{"bmpcube"}.ToImmutableArray(),
+                    MimeType = "cubemap/bitmapx"
+                },
+                Signature = new Segment[] {
+                    PrefixSegment.Create(0, "07 42 6D 70 43 75 62 65 02"),
+                }.ToSignature()
+            },
+        }.ToImmutableArray();
 }

@@ -44,6 +44,7 @@ public class MimeDetector : IMimeDetector
         AllBuildier.AddRange(exhaustiveDefs);
         AllBuildier.AddRange(CustomTypes.MESHX());
         AllBuildier.AddRange(CustomTypes.ANIMX());
+        AllBuildier.AddRange(CustomTypes.BMPCUBE());
 
         var all = AllBuildier
             .TrimDescription()
