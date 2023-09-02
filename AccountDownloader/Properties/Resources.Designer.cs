@@ -70,7 +70,7 @@ namespace AccountDownloader.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Neos Account Downloader.
+        ///   Looks up a localized string similar to Stiefel - Neos Account Downloader.
         /// </summary>
         public static string AppName {
             get {
@@ -349,7 +349,7 @@ namespace AccountDownloader.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (admin).
+        ///   Looks up a localized string similar to (Admin).
         /// </summary>
         public static string GroupsAdminIndicator {
             get {
