@@ -12,10 +12,10 @@ Please refer to the [License](LICENSE.md) file for additional commentary.
 # Download
 
 Windows:
-[Neos Account Downloader for Windows (v2023.9.1)](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases/download/v2023.9.1/AccountDownloaderWindows-v2023.9.1.zip)
+[Neos Account Downloader for Windows (v2023.9.2)](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases/download/v2023.9.2/AccountDownloaderWindows-v2023.9.2.zip)
 
 Linux:
-[Neos Account Downloader for Linux (v2023.9.1)](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases/download/v2023.9.1/AccountDownloaderLinux-v2023.9.1.tar.gz)
+[Neos Account Downloader for Linux (v2023.9.2)](https://github.com/stiefeljackal/NeosAccountDownloaderGPL/releases/download/v2023.9.2/AccountDownloaderLinux-v2023.9.2.tar)
 
 # Additional Features
 
