@@ -9,9 +9,13 @@ using Exceptions;
 
 public sealed class NeosRecordSearcher<R> : IRecordSearcher, IDisposable where R : class, IRecord, new()
 {
-    public const byte DEFAULT_BATCH_SIZE = 125;
+    public const short DEFAULT_BATCH_SIZE = 90;
 
-    public const byte MAX_RETRY_COUNT = 10;
+    public const byte MAX_RETRY_COUNT = 15;
+
+    public const short MIN_WAIT_TIME_IN_MILLI = 200;
+
+    public const short MAX_WAIT_TIME_IN_MILLI = 1750;
 
     public short BatchSize { get; set; } = DEFAULT_BATCH_SIZE;
 
@@ -35,9 +39,12 @@ public sealed class NeosRecordSearcher<R> : IRecordSearcher, IDisposable where R
         while (hasMoreResults)
         {
             CloudResult<SearchResults<R>> cloudResult = null;
-            for (var retryCount = 1; retryCount <= MAX_RETRY_COUNT; retryCount++)
+            for (byte retryCount = 1; retryCount <= MAX_RETRY_COUNT; retryCount++)
             {
                 cloudResult = await _cloud.FindRecords<R>(searchParameters).ConfigureAwait(false);
+                var waitTime = Math.Min(MIN_WAIT_TIME_IN_MILLI * retryCount, MAX_WAIT_TIME_IN_MILLI);
+
+                await Task.Delay(waitTime).ConfigureAwait(false);
 
                 if (cloudResult.IsOK) { break; }
                 else if ((cloudResult.State != HttpStatusCode.TooManyRequests && cloudResult.State != HttpStatusCode.InternalServerError))
@@ -93,7 +100,7 @@ public sealed class NeosRecordSearcher<R> : IRecordSearcher, IDisposable where R
 
     public void Dispose()
     {
-        foreach(var @delegate in SearchResultSizeUpdate.GetInvocationList().Cast<EventHandler<RecordsReceivedEventArgs>>())
+        foreach (var @delegate in SearchResultSizeUpdate.GetInvocationList().Cast<EventHandler<RecordsReceivedEventArgs>>())
         {
             SearchResultSizeUpdate -= @delegate;
         }
