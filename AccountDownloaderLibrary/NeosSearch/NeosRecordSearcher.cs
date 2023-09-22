@@ -40,11 +40,11 @@ public sealed class NeosRecordSearcher<R> : IRecordSearcher, IDisposable where R
                 cloudResult = await _cloud.FindRecords<R>(searchParameters).ConfigureAwait(false);
 
                 if (cloudResult.IsOK) { break; }
-                else if((cloudResult.State != HttpStatusCode.TooManyRequests && cloudResult.State != HttpStatusCode.InternalServerError))
+                else if ((cloudResult.State != HttpStatusCode.TooManyRequests && cloudResult.State != HttpStatusCode.InternalServerError))
                 {
                     throw new UnexpectedCloudRecordSearchErrorException(cloudResult.Content, cloudResult.State);
                 }
-                else if(retryCount >= MAX_RETRY_COUNT)
+                else if (retryCount >= MAX_RETRY_COUNT)
                 {
                     throw new NeosCloudBusyException();
                 }
@@ -55,7 +55,7 @@ public sealed class NeosRecordSearcher<R> : IRecordSearcher, IDisposable where R
 
             var recentMinDate = resultRecords.OrderBy(r => r.LastModificationTime).Last().LastModificationTime.AddMicroseconds(1);
 
-            if (recentMinDate > searchParameters.MinDate)
+            if (searchParameters.MinDate == null || recentMinDate > searchParameters.MinDate)
             {
                 searchParameters.MinDate = recentMinDate;
                 searchParameters.Offset = 0;
@@ -69,7 +69,7 @@ public sealed class NeosRecordSearcher<R> : IRecordSearcher, IDisposable where R
             currentSearchCount += lastRecordIdBatch.Count;
             OnSearchResultSizeUpdate(searchParameters.ByOwner, currentSearchCount, lastRecordIdBatch.Count);
 
-            foreach(var recordId in lastRecordIdBatch)
+            foreach (var recordId in lastRecordIdBatch)
             {
                 yield return recordId;
             }
