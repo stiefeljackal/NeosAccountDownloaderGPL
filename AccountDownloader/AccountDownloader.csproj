@@ -9,7 +9,7 @@
     <RootNamespace>AccountDownloader</RootNamespace>
     <AssemblyName>Stiefel Neos Account Downloader</AssemblyName>
     <Company>Stiefel</Company>
-    <Version>2023.9.1</Version>
+    <Version>2023.9.2</Version>
 
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
     <GenerateAssemblyVersionAttribute>True</GenerateAssemblyVersionAttribute>
