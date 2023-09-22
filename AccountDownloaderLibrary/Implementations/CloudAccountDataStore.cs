@@ -13,6 +13,8 @@ namespace AccountDownloaderLibrary
     {
         private const byte MAX_RECORD_FETCH_ATTEMPTS = 10;
 
+        private const short CLOUDFLARE_TIMEOUT_HTTP_STATUS_CODE = 524;
+
         public readonly CloudXInterface Cloud;
 
         private readonly IRecordSearcher _recordSearcher;
@@ -317,6 +319,12 @@ namespace AccountDownloaderLibrary
         {
             var response = await WebClient.GetAsync(GetAssetUri(hash)).ConfigureAwait(false);
 
+            if ((short)response.StatusCode == CLOUDFLARE_TIMEOUT_HTTP_STATUS_CODE || response.StatusCode == HttpStatusCode.BadGateway)
+            {
+                //Cloudflare has a timeout, so we will call the direct URL of the blob.
+                response = await WebClient.GetAsync(GetDirectAssetUri(hash)).ConfigureAwait(false);
+            }
+
             if (!response.IsSuccessStatusCode)
             {
                 throw new CloudXAssetResponseErrorException(hash, response.StatusCode);
@@ -332,6 +340,13 @@ namespace AccountDownloaderLibrary
         /// <param name="hash">The file hash of the asset.</param>
         /// <returns></returns>
         private Uri GetAssetUri(string hash) => CloudXInterface.NeosDBToHttp(new Uri($"{DB_PREFIX}{hash}"), NeosDB_Endpoint.Default);
+
+        /// <summary>
+        /// Gets the direct, non-CDN CloudX Uri of the asset.
+        /// </summary>
+        /// <param name="hash">The file hash of the asset.</param>
+        /// <returns></returns>
+        private Uri GetDirectAssetUri(string hash) => new Uri($"{CloudXInterface.NEOS_ASSETS_BLOB}{hash}");
 
         /// <summary>
         /// Gets the asset metadata of the asset from CloudX.
