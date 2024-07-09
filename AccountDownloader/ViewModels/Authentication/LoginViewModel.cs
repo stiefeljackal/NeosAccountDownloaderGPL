@@ -25,6 +25,8 @@ public class LoginViewModel : ViewModelBase, IValidatableViewModel
 
     public ReactiveCommand<Unit, AuthResult> Login { get; set; }
 
+    IValidationContext IValidatableViewModel.ValidationContext => ValidationContext;
+
     private readonly IAppCloudService CloudService;
     public LoginViewModel()
     {
