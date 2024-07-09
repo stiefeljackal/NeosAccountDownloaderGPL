@@ -53,6 +53,8 @@ public static class NeosFetcher
             foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
             {
                 var key = entry.Key;
+                if (key == null) { continue; }
+
                 var matches = DATA_MANAGED_ASSEMBLY_REGEX.Matches(key);
 
                 if (matches.Count <= 0) {  continue; }

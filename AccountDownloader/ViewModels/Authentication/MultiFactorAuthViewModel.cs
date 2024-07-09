@@ -26,6 +26,8 @@ public class MultiFactorAuthViewModel : ViewModelBase, IValidatableViewModel
 
     public Interaction<string?, Unit> ShowError { get; }
 
+    IValidationContext IValidatableViewModel.ValidationContext => ValidationContext;
+
     public MultiFactorAuthViewModel()
     {
         CloudService = Locator.Current.GetService<IAppCloudService>() ?? throw new ArgumentNullException("Cannot login without an app service");
